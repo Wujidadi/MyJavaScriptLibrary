@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MyJSLib Test</title>
+</head>
+<body>
+    <div id="testfield_1"></div>
+    <div id="testfield_2"></div>
+    <script src="MyJavaScriptLibrary.js"></script>
+    <script>
+        let originalText = 200000;
+        let paddingText = padding(originalText, '0', 6, 'front');
+        let dateText = countDateCalendarManner(originalText);
+        document.querySelector('#testfield_1').innerHTML = originalText + '<br>' + paddingText;
+        document.querySelector('#testfield_2').innerHTML = dateText;
+    </script>
+</body>
+</html>
