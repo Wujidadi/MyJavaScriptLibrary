@@ -32,7 +32,7 @@ function padding(str, char, num, direction = 'left') {
 
 function countDateCalendarManner(d)
 {
-    /* 強制轉換輸入日數為整數，並從日期從 0 開始計數，以利後續換算 */
+    /* 強制轉換輸入日數為整數，並令日期從 0 開始計數，以利後續換算 */
     let day = parseInt(d - 1);
 
     /* 日數為負時返回空值 */
@@ -42,7 +42,7 @@ function countDateCalendarManner(d)
     }
 
     /* 宣告大、中、小 3 種週期的日數 */
-    let DayInGrandCycle = day % 146097;     // 大週期：400 年 97 閏，以 146,097 日為一循環
+    let DayInGrandCycle = day % 146097;                 // 大週期：400 年 97 閏，以 146,097 日為一循環
     let DayInMiddleCycle;
     let DayInNormalCycle;
 
@@ -98,17 +98,20 @@ function countDateCalendarManner(d)
     let YearByNormalCycle;
 
     /* 中週期年數規則 */
-    // 中週期日數 = 1460 且小週期日數 = 0，表示為第 101、201、301 年的第 1 天，此時令中週期年數 = 大週期日數除以 1461 取整乘以 4 後再加 1
+    // 中週期日數 = 1460 且小週期日數 = 0，表示為第 101、201、301 年的第 1 天，
+    // 此時令中週期年數 = 大週期日數除以 1461 取整乘以 4 後再加 1
     if (DayInMiddleCycle == 1460 && DayInNormalCycle == 0)
     {
         YearByMiddleCycle = Math.floor(DayInGrandCycle / 1461) * 4 + 1;
     }
-    // 中、小週期日數均為 0，且位於大週期的後 300 年，此時令中週期年數 = 大週期日數除以 1461 取整加 1 後再乘以 4
+    // 中、小週期日數均為 0，且位於大週期的後 300 年，表示為每 4 年中週期的第 1 天，
+    // 此時令中週期年數 = 大週期日數除以 1461 取整加 1 後再乘以 4
+    // （前 100 年沒有「世紀年不能被 400 整除則不閏」的狀況，故每 4 年第 1 天不須如此處理）
     else if (DayInMiddleCycle == 0 && DayInNormalCycle == 0 && DayInGrandCycle >= 36525)
     {
         YearByMiddleCycle = (Math.floor(DayInGrandCycle / 1461) + 1) * 4;
     }
-    // 其他狀況下，令中週期年數 = 大週期日數除以 1461 取整乘以 4
+    // 其他狀況下，令中週期年數 = 大週期日數除以 1461 取整再乘以 4
     else
     {
         YearByMiddleCycle = Math.floor(DayInGrandCycle / 1461) * 4;
@@ -149,11 +152,11 @@ function countDateCalendarManner(d)
     /* 律定平年及閏年的各月日數陣列 */
     let DaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     if (LeapYear == 1) {
-        DaysInMonth[1] = 29;    // 閏年單獨將 2 月的天數改為 29
+        DaysInMonth[1] = 29;        // 閏年單獨將 2 月的天數改為 29
     }
     /* 將全年各月累計日數儲存為陣列 */
-    let AddUpDays = [0];        // 全年各月累計日數陣列，先律定第 0 項 = 0
-    let addUp = 0;              // 各月日數累加變數
+    let AddUpDays = [0];            // 全年各月累計日數陣列，先律定第 0 項 = 0
+    let addUp = 0;                  // 各月日數累加變數
     for (let i = 0; i < DaysInMonth.length; i++) {
         addUp += DaysInMonth[i];
         AddUpDays[i + 1] = addUp;
