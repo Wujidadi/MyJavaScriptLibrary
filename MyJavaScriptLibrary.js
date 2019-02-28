@@ -124,16 +124,16 @@ function countDateCalendarManner(d)
     let Year = YearByGrandCycle + YearByMiddleCycle + YearByNormalCycle;
 
     /* 日數 log */
-    console.log('Day in grand cycle (400 years) = ' + DayInGrandCycle);
-    console.log('Day in middle cycle (4 years) = ' + DayInMiddleCycle);
-    console.log('Day in normal cycle (1 year) = ' + DayInNormalCycle);
-    console.log('Day = ' + Day);
+    // console.log('Day in grand cycle (400 years) = ' + DayInGrandCycle);
+    // console.log('Day in middle cycle (4 years) = ' + DayInMiddleCycle);
+    // console.log('Day in normal cycle (1 year) = ' + DayInNormalCycle);
+    // console.log('Day = ' + Day);
 
     /* 年數 log */
-    console.log('Year by grand cycle = ' + YearByGrandCycle);
-    console.log('Year by middle cycle = ' + YearByMiddleCycle);
-    console.log('Year by normal cycle = ' + YearByNormalCycle);
-    console.log('Year = ' + Year);
+    // console.log('Year by grand cycle = ' + YearByGrandCycle);
+    // console.log('Year by middle cycle = ' + YearByMiddleCycle);
+    // console.log('Year by normal cycle = ' + YearByNormalCycle);
+    // console.log('Year = ' + Year);
 
     /* 宣告年數字串及閏年旗標 */
     let YearStr = '';
@@ -162,8 +162,8 @@ function countDateCalendarManner(d)
         AddUpDays[i + 1] = addUp;
     }
     /* 各月日數及累計日數陣列印出 log */
-    console.log('DaysInMonth = [' + DaysInMonth + ']');
-    console.log('AddUpDays = [' + AddUpDays + ']');
+    // console.log('DaysInMonth = [' + DaysInMonth + ']');
+    // console.log('AddUpDays = [' + AddUpDays + ']');
 
     /* 應用 switch case 的範圍判斷語法，輸出日數相對應的年月日計數 */
     switch (true) {
