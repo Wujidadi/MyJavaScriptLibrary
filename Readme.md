@@ -18,5 +18,5 @@
   考慮了 4 年 1 閏及 400 年 97 閏的置閏週期。<br>
   *d*：輸入日數（從 1 開始）。
 
-  **dateFormat**(*time*, *ms = false*)<br>
+* **dateFormat**(*time*, *ms = false*)<br>
   將以 13 位數（含毫秒）輸入的時間戳轉換為 `Y-m-d H:i:s`（`ms = false`）或 `Y-m-d H:i:s.u`（`ms = true`）格式，月、日、時、分、秒不足 2 位數、毫秒不足 3 位數時補零。
