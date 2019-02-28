@@ -220,3 +220,19 @@ function countDateCalendarManner(d)
             break;
     }
 }
+
+function dateFormat(time, ms = false) {
+    let date = new Date(time);
+    let y = date.getFullYear();
+    let m = padding(date.getMonth() + 1, '0', 2);
+    let d = padding(date.getDate(), '0', 2);
+    let h = padding(date.getHours(), '0', 2);
+    let i = padding(date.getMinutes(), '0', 2);
+    let s = padding(date.getSeconds(), '0', 2);
+    if (!ms) {
+        return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s;
+    } else {
+        let u = padding(date.getMilliseconds(), '0', 3);
+        return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s + '.' + u;
+    }
+}
