@@ -236,3 +236,16 @@ function dateFormat(time, ms = false) {
         return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s + '.' + u;
     }
 }
+
+function getParameter(param) {
+    let url = location.href;
+    let paraString = url.substring(url.indexOf('?') + 1, url.length).split('&');
+    for (let i = 0; i < paraString.length; i++) {
+        let paraParse = paraString[i].split('=');
+        let key = paraParse[0];
+        let val = paraParse[1];
+        if (key == param) {
+            return val
+        }
+    }
+}

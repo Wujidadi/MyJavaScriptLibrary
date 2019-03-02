@@ -20,3 +20,6 @@
 
 * **dateFormat**(*time*, *ms = false*)<br>
   將以 13 位數（含毫秒）輸入的時間戳轉換為 `Y-m-d H:i:s`（`ms = false`）或 `Y-m-d H:i:s.u`（`ms = true`）格式，月、日、時、分、秒不足 2 位數、毫秒不足 3 位數時補零。
+
+* **getParameter**(*param*)<br>
+  取得 URL 中的 GET 參數。
