@@ -1,3 +1,4 @@
+/* 依據指定的字元、數量及方向，在輸入字串的前或後填補字元 */
 function padding(str, char, num, direction = 'left') {
     let dir = direction.toLowerCase();
     let i = 0;
@@ -30,6 +31,7 @@ function padding(str, char, num, direction = 'left') {
 }
 
 
+/* 依據年、月、日格式計算日數，月、日部分使用一般曆法風格 */
 function countDateCalendarManner(d)
 {
     /* 強制轉換輸入日數為整數，並令日期從 0 開始計數，以利後續換算 */
@@ -221,6 +223,8 @@ function countDateCalendarManner(d)
     }
 }
 
+
+/* 將時間戳轉換為 "Y-m-d H:i:s"（ms = false）或 "Y-m-d H:i:s.u"（ms = true）格式 */
 function dateFormat(time, ms = false) {
     let date = new Date(time);
     let y = date.getFullYear();
@@ -237,6 +241,8 @@ function dateFormat(time, ms = false) {
     }
 }
 
+
+/* 取得 URL 中的 GET 參數 */
 function getParameter(param) {
     let url = location.href;
     let paraString = url.substring(url.indexOf('?') + 1, url.length).split('&');
