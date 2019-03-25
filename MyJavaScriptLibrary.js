@@ -271,7 +271,7 @@ function padding(str, char, num, direction = 'left') {
 }
 
 
-/* 產生由數字或數字 + 小寫英文字母組成的隨機字串 */
+/* 產生由數字或數字 + 英文字母組成的隨機字串 */
 function randStr(radix, len, caps = false) {
     if (radix < 2 || radix > 36) {
         console.log("The radix must be between 2 and 36.");
