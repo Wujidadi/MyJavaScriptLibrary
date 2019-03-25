@@ -1,36 +1,3 @@
-/* 依據指定的字元、數量及方向，在輸入字串的前或後填補字元 */
-function padding(str, char, num, direction = 'left') {
-    let dir = direction.toLowerCase();
-    let i = 0;
-    let dif = 0;
-    let tar = '';
-    let len = str.toString().length;
-    if (len < num) {
-        dif = num - len;
-        for (i = 0; i < dif; i++) {
-            tar += char;
-        }
-        switch (dir) {
-            default:
-            case 'left':
-            case 'front':
-            case 'before':
-            case 'default':
-                tar += str.toString();
-                break;
-
-            case 'right':
-            case 'after':
-            case 'back':
-                tar = str.toString() + tar;
-                break;
-        }
-        return tar;
-    }
-    return str;
-}
-
-
 /* 依據年、月、日格式計算日數，月、日部分使用一般曆法風格 */
 function countDateCalendarManner(d)
 {
@@ -242,6 +209,20 @@ function dateFormat(time, ms = false) {
 }
 
 
+/* 將 "Y-m-d H:i:s"（ms = false）或 "Y-m-d H:i:s.u"（ms = true）格式的時間轉換為 13 位數時間戳 */
+function dateStamp(date) {
+    if (date.length == 19) {
+        if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d/.test(date)) {
+            return new Date(date).getTime();
+        }
+    } else if (date.length > 20 && date.length < 24) {
+        if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,3}/.test(date)) {
+            return new Date(date).getTime();
+        }
+    }
+}
+
+
 /* 取得 URL 中的 GET 參數 */
 function getParameter(param) {
     let url = location.href;
@@ -253,5 +234,62 @@ function getParameter(param) {
         if (key == param) {
             return val
         }
+    }
+}
+
+
+/* 依據指定的字元、數量及方向，在輸入字串的前或後填補字元 */
+function padding(str, char, num, direction = 'left') {
+    let dir = direction.toLowerCase();
+    let i = 0;
+    let dif = 0;
+    let tar = '';
+    let len = str.toString().length;
+    if (len < num) {
+        dif = num - len;
+        for (i = 0; i < dif; i++) {
+            tar += char;
+        }
+        switch (dir) {
+            default:
+            case 'left':
+            case 'front':
+            case 'before':
+            case 'default':
+                tar += str.toString();
+                break;
+
+            case 'right':
+            case 'after':
+            case 'back':
+                tar = str.toString() + tar;
+                break;
+        }
+        return tar;
+    }
+    return str;
+}
+
+
+/* 產生由數字或數字 + 小寫英文字母組成的隨機字串 */
+function randStr(radix, len, caps = false) {
+    if (radix < 2 || radix > 36) {
+        console.log("The radix must be between 2 and 36.");
+        return undefined;
+    } else {
+        let str = "";
+        let s = Math.random().toString(radix).split(".")[1];
+        while (s.length < len) {
+            s += Math.random().toString(radix).split(".")[1];
+        }
+        s = s.substring(0, len);
+        for (let i = 0; i < s.length; i++) {
+            if (/[a-z]/.test(s[i]) && caps && parseInt(Math.random() * 2)) {
+                str += s[i].toUpperCase();
+            } else {
+                str += s[i];
+            }
+        }
+        return str;
     }
 }
