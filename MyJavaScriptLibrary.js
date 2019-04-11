@@ -247,9 +247,9 @@ function degMinSec(degree) {
     let p  = (degree >= 0) ? 1 : -1;
     let df = Math.abs(degree);
     let d  = Math.floor(df);
-    let mf = parseFloat(((df - d) * 60).toFixed(12));
+    let mf = parseFloat(((df - d) * 60).toFixed(10));
     let m  = Math.floor(mf);
-    let sf = parseFloat(((mf - m) * 60).toFixed(12));
+    let sf = parseFloat(((mf - m) * 60).toFixed(10));
     return {
         degree: d * p,
         minute: m,
