@@ -27,6 +27,12 @@
   *num*：要填補的字元數目<br>
   *direction*：填補方向，預設為 left（左邊），可用的值有 left、front、before（以上均填補在左邊）及 right、after、back（以上均填補在右邊）。
 
+* **randNum**(*floor = 0*, *ceil = 1*)<br>
+  產生指定區間的亂數。<br>
+  *floor*：區間下限，預設為 0。<br>
+  *ceil*：區間上限，預設為 0。<br>
+  不指定區間上下限時，自動依預設值分別代入 0 和 1，效果與 Math.random() 相同。
+
 * **randStr**(*radix*, *len*, *caps = false*)<br>
   產生由數字或數字 + 英文字母組成的隨機字串。<br>
   *radix*：採用的進位制基數，若要產生純數字，則設為 10（10 進位）；若要產生所有數字 + 字母組成的字串，則設為 36（36 進位）。<br>

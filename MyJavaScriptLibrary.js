@@ -271,6 +271,13 @@ function padding(str, char, num, direction = 'left') {
 }
 
 
+/* 產生指定區間的亂數 */
+function randNum(floor = 0, ceil = 1) {
+    let rand = Math.random() * (ceil - floor);
+    return floor + rand;
+}
+
+
 /* 產生由數字或數字 + 英文字母組成的隨機字串 */
 function randStr(radix, len, caps = false) {
     if (radix < 2 || radix > 36) {
