@@ -17,14 +17,24 @@
 * **dateStamp**(*date*)<br>
   將 `Y-m-d H:i:s`（`ms = false`）或 `Y-m-d H:i:s.u`（`ms = true`）格式的時間轉換為 13 位數（含毫秒）的時間戳。
 
+* **degFull**(*degree*, *minute*, *second*)<br>
+  轉換度分秒格式的度數為小數點格式。<br>
+  *degree*：度分秒中的「度數」部分。<br>
+  *minute*：度分秒中的「分」部分；值小於 0 或大於等於 60 時拋出錯誤。<br>
+  *second*：度分秒中的「秒」部分；值小於 0 或大於等於 60 時拋出錯誤。
+
+* **degMinSec**(*degree*)<br>
+  轉換小數點格式的度數為度分秒格式。<br>
+  *degree*：小數點格式的度數。
+
 * **getParameter**(*param*)<br>
   取得 URL 中的 GET 參數。
 
 * **padding**(*str*, *char*, *num*, *direction = 'left'*)<br>
   依據指定的字元、數量及方向，在輸入字串的前或後填補字元。<br>
-  *str*：輸入字串<br>
-  *char*：要填補的字元<br>
-  *num*：要填補的字元數目<br>
+  *str*：輸入字串。<br>
+  *char*：要填補的字元。<br>
+  *num*：要填補的字元數目。<br>
   *direction*：填補方向，預設為 left（左邊），可用的值有 left、front、before（以上均填補在左邊）及 right、after、back（以上均填補在右邊）。
 
 * **randNum**(*floor = 0*, *ceil = 1*)<br>

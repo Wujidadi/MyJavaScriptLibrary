@@ -223,6 +223,41 @@ function dateStamp(date) {
 }
 
 
+/* 轉換度分秒格式的度數為小數點格式 */
+function degFull(degree, minute, second) {
+    try {
+        if (second >= 60 || second < 0) {
+            throw "Second value must be between 0 and 59.999...";
+        } else if (minute >= 60 || minute < 0) {
+            throw "Minute value must be between 0 and 59.999...";
+        }
+        let p = (degree >= 0) ? 1 : -1;
+        let sim = parseFloat((second / 60).toFixed(12));
+        let mid = parseFloat(((sim + minute) / 60).toFixed(12));
+        let d = parseFloat((mid + Math.abs(degree)).toFixed(12));
+        return d * p;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+/* 轉換小數點格式的度數為度分秒格式 */
+function degMinSec(degree) {
+    let p  = (degree >= 0) ? 1 : -1;
+    let df = Math.abs(degree);
+    let d  = Math.floor(df);
+    let mf = parseFloat(((df - d) * 60).toFixed(12));
+    let m  = Math.floor(mf);
+    let sf = parseFloat(((mf - m) * 60).toFixed(12));
+    return {
+        degree: d * p,
+        minute: m,
+        second: sf
+    };
+}
+
+
 /* 取得 URL 中的 GET 參數 */
 function getParameter(param) {
     let url = location.href;
