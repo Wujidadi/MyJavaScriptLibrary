@@ -273,8 +273,15 @@ function padding(str, char, num, direction = 'left') {
 
 /* 產生指定區間的亂數 */
 function randNum(floor = 0, ceil = 1) {
-    let rand = Math.random() * (ceil - floor);
-    return floor + rand;
+    try {
+        if (ceil < floor) {
+            throw "Ceil is less than floor!"
+        }
+        let rand = Math.random() * (ceil - floor);
+        return floor + rand;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 
