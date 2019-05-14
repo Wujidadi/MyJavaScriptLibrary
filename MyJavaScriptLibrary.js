@@ -320,7 +320,7 @@ function randNum(floor = 0, ceil = 1) {
 }
 
 
-/* 產生由數字或數字 + 英文字母組成的隨機字串 */
+/* 產生由數字或數字 + 英文字母組成的隨機字串，caps 為 true 時等於偽 62 進位隨機亂數 */
 function randStr(radix, len, caps = false) {
     if (radix < 2 || radix > 36) {
         console.log("The radix must be between 2 and 36.");
