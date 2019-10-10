@@ -283,35 +283,53 @@ function degMinSec(degree)
 /* 取得 URL 中的 GET 參數 */
 function getParameter(param)
 {
-    let url = location.href,
-        paraString = url.substring(url.indexOf('?') + 1, url.length).split('&'),
-        paraParse, key, val,
-        paraObj = {};
+    let search = location.search.substr(1),
+        paramString = search.split('&'),
+        paramParse, key, val,
+        paramObj = {};
 
     // 未指定特定參數時，返回所有參數（物件）
     if (param === undefined)
     {
-        for (let i = 0; i < paraString.length; i++)
+        // GET 參數字串長度大於 1（問號本身占 1 字元）才進行解析
+        if (search.length > 1)
         {
-            paraParse = paraString[i].split('=');
-            key = paraParse[0];
-            val = paraParse[1];
-            paraObj[key] = val;
+            for (let i = 0; i < paramString.length; i++)
+            {
+                paramParse = paramString[i].split('=');
+                key = paramParse[0];
+                val = paramParse[1];
+                paramObj[key] = val;
+            }
+            return paramObj;
         }
-        return paraObj;
+        // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空物件
+        else
+        {
+            return {};
+        }
     }
     // 指定具體參數時，返回單一參數的值（字串）
     else
     {
-        for (let i = 0; i < paraString.length; i++)
+        // GET 參數字串長度大於 1（問號本身占 1 字元）才進行解析
+        if (search.length > 1)
         {
-            paraParse = paraString[i].split('=');
-            key = paraParse[0];
-            val = paraParse[1];
-            if (key == param)
+            for (let i = 0; i < paramString.length; i++)
             {
-                return val
+                paramParse = paramString[i].split('=');
+                key = paramParse[0];
+                val = paramParse[1];
+                if (key == param)
+                {
+                    return val;
+                }
             }
+        }
+        // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空字串
+        else
+        {
+            return null;
         }
     }
 }
