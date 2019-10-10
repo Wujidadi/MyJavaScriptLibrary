@@ -1,4 +1,5 @@
 define(() => {
+
     return {
 
         /* 依據年、月、日格式計算日數，月、日部分使用一般曆法風格 */
@@ -195,17 +196,22 @@ define(() => {
 
 
         /* 將時間戳轉換為 "Y-m-d H:i:s"（ms = false）或 "Y-m-d H:i:s.u"（ms = true）格式 */
-        dateFormat: function(time, ms = false) {
-            let date = new Date(time);
-            let y = date.getFullYear();
-            let m = padding(date.getMonth() + 1, '0', 2);
-            let d = padding(date.getDate(), '0', 2);
-            let h = padding(date.getHours(), '0', 2);
-            let i = padding(date.getMinutes(), '0', 2);
-            let s = padding(date.getSeconds(), '0', 2);
-            if (!ms) {
+        dateFormat: function(time, ms = false)
+        {
+            let date = new Date(time),
+                y = date.getFullYear(),
+                m = padding(date.getMonth() + 1, '0', 2),
+                d = padding(date.getDate(), '0', 2),
+                h = padding(date.getHours(), '0', 2),
+                i = padding(date.getMinutes(), '0', 2),
+                s = padding(date.getSeconds(), '0', 2);
+
+            if (!ms)
+            {
                 return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s;
-            } else {
+            }
+            else
+            {
                 let u = padding(date.getMilliseconds(), '0', 3);
                 return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s + '.' + u;
             }
@@ -213,13 +219,19 @@ define(() => {
 
 
         /* 將 "Y-m-d H:i:s"（ms = false）或 "Y-m-d H:i:s.u"（ms = true）格式的時間轉換為 13 位數時間戳 */
-        dateStamp: function(date) {
-            if (date.length == 19) {
-                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d/.test(date)) {
+        dateStamp: function(date)
+        {
+            if (date.length == 19)
+            {
+                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d/.test(date))
+                {
                     return new Date(date).getTime();
                 }
-            } else if (date.length > 20 && date.length < 24) {
-                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,3}/.test(date)) {
+            }
+            else if (date.length > 20 && date.length < 24)
+            {
+                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,3}/.test(date))
+                {
                     return new Date(date).getTime();
                 }
             }
@@ -227,32 +239,43 @@ define(() => {
 
 
         /* 轉換度分秒格式的度數為小數點格式 */
-        degFull: function(degree, minute, second) {
-            try {
-                if (second >= 60 || second < 0) {
+        degFull: function(degree, minute, second)
+        {
+            try
+            {
+                if (second >= 60 || second < 0)
+                {
                     throw "Second value must be between 0 and 59.999...";
-                } else if (minute >= 60 || minute < 0) {
+                }
+                else if (minute >= 60 || minute < 0)
+                {
                     throw "Minute value must be between 0 and 59.999...";
                 }
-                let p = (degree >= 0) ? 1 : -1;
-                let sim = parseFloat((second / 60).toFixed(12));
-                let mid = parseFloat(((sim + minute) / 60).toFixed(12));
-                let d = parseFloat((mid + Math.abs(degree)).toFixed(12));
+
+                let p = (degree >= 0) ? 1 : -1,
+                    sim = parseFloat((second / 60).toFixed(12)),
+                    mid = parseFloat(((sim + minute) / 60).toFixed(12)),
+                    d = parseFloat((mid + Math.abs(degree)).toFixed(12));
+
                 return d * p;
-            } catch (err) {
+            }
+            catch (err)
+            {
                 console.error(err);
             }
         },
 
 
         /* 轉換小數點格式的度數為度分秒格式 */
-        degMinSec: function(degree) {
-            let p  = (degree >= 0) ? 1 : -1;
-            let df = Math.abs(degree);
-            let d  = Math.floor(df);
-            let mf = parseFloat(((df - d) * 60).toFixed(10));
-            let m  = Math.floor(mf);
-            let sf = parseFloat(((mf - m) * 60).toFixed(10));
+        degMinSec: function(degree)
+        {
+            let p  = (degree >= 0) ? 1 : -1,
+                df = Math.abs(degree),
+                d  = Math.floor(df),
+                mf = parseFloat(((df - d) * 60).toFixed(10)),
+                m  = Math.floor(mf),
+                sf = parseFloat(((mf - m) * 60).toFixed(10));
+
             return {
                 degree: d * p,
                 minute: m,
@@ -262,33 +285,81 @@ define(() => {
 
 
         /* 取得 URL 中的 GET 參數 */
-        getParameter: function(param) {
-            let url = location.href;
-            let paraString = url.substring(url.indexOf('?') + 1, url.length).split('&');
-            for (let i = 0; i < paraString.length; i++) {
-                let paraParse = paraString[i].split('=');
-                let key = paraParse[0];
-                let val = paraParse[1];
-                if (key == param) {
-                    return val
+        getParameter: function(param)
+        {
+            let url = location.href,
+                paraString = url.substring(url.indexOf('?') + 1, url.length).split('&'),
+                paraParse, key, val,
+                paraObj = {};
+
+            // 未指定特定參數時，返回所有參數（物件）
+            if (param === undefined)
+            {
+                for (let i = 0; i < paraString.length; i++)
+                {
+                    paraParse = paraString[i].split('=');
+                    key = paraParse[0];
+                    val = paraParse[1];
+                    paraObj[key] = val;
+                }
+                return paraObj;
+            }
+            // 指定具體參數時，返回單一參數的值（字串）
+            else
+            {
+                for (let i = 0; i < paraString.length; i++)
+                {
+                    paraParse = paraString[i].split('=');
+                    key = paraParse[0];
+                    val = paraParse[1];
+                    if (key == param)
+                    {
+                        return val
+                    }
                 }
             }
         },
 
 
+        /* 給定一維物件，轉為 URL GET 參數 */
+        packParameter: function(paramObj)
+        {
+            let keys = Object.keys(paramObj),
+                paramArray = [],
+                paramString = '';
+
+            keys.forEach(function(key)
+            {
+                paramArray.push(`${key}=${paramObj[key]}`);
+            });
+
+            if (paramArray.length > 0)
+            {
+                paramString = '?' + paramArray.join('&');
+            }
+
+            return paramString;
+        }
+
+
         /* 依據指定的字元、數量及方向，在輸入字串的前或後填補字元 */
-        padding: function(str, char, num, direction = 'left') {
-            let dir = direction.toLowerCase();
-            let i = 0;
-            let dif = 0;
-            let tar = '';
-            let len = str.toString().length;
-            if (len < num) {
+        padding: function(str, char, num, direction = 'left')
+        {
+            let dir = direction.toLowerCase(),
+                i = 0,
+                dif = 0,
+                tar = '',
+                len = str.toString().length;
+
+            if (len < num)
+            {
                 dif = num - len;
-                for (i = 0; i < dif; i++) {
+                for (i = 0; i < dif; i++)
+                {
                     tar += char;
                 }
-                switch (dir) {
+                switch (dir)
+                {
                     default:
                     case 'left':
                     case 'front':
@@ -305,45 +376,64 @@ define(() => {
                 }
                 return tar;
             }
+
             return str;
         },
 
 
         /* 產生指定區間的亂數 */
-        randNum: function(floor = 0, ceil = 1) {
+        randNum: function(floor = 0, ceil = 1)
+        {
             try {
-                if (ceil < floor) {
+                if (ceil < floor)
+                {
                     throw "Ceil is less than floor!"
                 }
                 let rand = Math.random() * (ceil - floor);
                 return floor + rand;
-            } catch (err) {
+            }
+            catch (err)
+            {
                 console.error(err);
             }
         },
 
 
         /* 產生由數字或數字 + 英文字母組成的隨機字串，caps 為 true 時等於偽 62 進位隨機亂數 */
-        randStr: function(radix, len, caps = false) {
-            if (radix < 2 || radix > 36) {
+        randStr: function(radix, len, caps = false)
+        {
+            if (radix < 2 || radix > 36)
+            {
                 console.log("The radix must be between 2 and 36.");
                 return undefined;
-            } else {
-                let str = "";
-                let s = Math.random().toString(radix).split(".")[1];
-                while (s.length < len) {
+            }
+            else
+            {
+                let str = "",
+                    s = Math.random().toString(radix).split(".")[1];
+
+                while (s.length < len)
+                {
                     s += Math.random().toString(radix).split(".")[1];
                 }
                 s = s.substring(0, len);
-                for (let i = 0; i < s.length; i++) {
-                    if (/[a-z]/.test(s[i]) && caps && parseInt(Math.random() * 2)) {
+
+                for (let i = 0; i < s.length; i++)
+                {
+                    if (/[a-z]/.test(s[i]) && caps && parseInt(Math.random() * 2))
+                    {
                         str += s[i].toUpperCase();
-                    } else {
+                    }
+                    else
+                    {
                         str += s[i];
                     }
                 }
+
                 return str;
             }
         }
+
     }
+
 });
