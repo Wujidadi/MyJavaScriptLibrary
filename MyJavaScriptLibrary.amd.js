@@ -450,6 +450,14 @@ define(() => {
 
                 return str;
             }
+        },
+
+
+        /* 清空所有子元素 */
+        Element.prototype.removeAllChildren: function() {
+            while (this.firstChild) {
+                this.removeChild(this.firstChild);
+            }
         }
 
     }
