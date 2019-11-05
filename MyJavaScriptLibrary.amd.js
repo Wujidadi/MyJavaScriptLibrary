@@ -146,51 +146,39 @@ define(() => {
 
                 case Day < AddUpDays[1]:
                     return YearStr + '1 月 ' + (Day + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[2]:
                     return YearStr + '2 月 ' + (Day - AddUpDays[1] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[3]:
                     return YearStr + '3 月 ' + (Day - AddUpDays[2] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[4]:
                     return YearStr + '4 月 ' + (Day - AddUpDays[3] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[5]:
                     return YearStr + '5 月 ' + (Day - AddUpDays[4] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[6]:
                     return YearStr + '6 月 ' + (Day - AddUpDays[5] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[7]:
                     return YearStr + '7 月 ' + (Day - AddUpDays[6] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[8]:
                     return YearStr + '8 月 ' + (Day - AddUpDays[7] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[9]:
                     return YearStr + '9 月 ' + (Day - AddUpDays[8] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[10]:
                     return YearStr + '10 月 ' + (Day - AddUpDays[9] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[11]:
                     return YearStr + '11 月 ' + (Day - AddUpDays[10] + 1) + ' 日';
-                    break;
 
                 case Day < AddUpDays[12]:
                     return YearStr + '12 月 ' + (Day - AddUpDays[11] + 1) + ' 日';
-                    break;
             }
         },
 
@@ -357,7 +345,7 @@ define(() => {
             }
 
             return paramString;
-        }
+        },
 
 
         /* 依據指定的字元、數量及方向，在輸入字串的前或後填補字元 */
@@ -405,7 +393,7 @@ define(() => {
             try {
                 if (ceil < floor)
                 {
-                    throw "Ceil is less than floor!"
+                    throw "Ceil is less than floor!";
                 }
                 let rand = Math.random() * (ceil - floor);
                 return floor + rand;
