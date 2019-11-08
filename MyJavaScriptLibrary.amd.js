@@ -501,33 +501,94 @@ define(() => {
 
 
         /**
-         * 將表單 datetime 項的值轉成標準 Y-m-d H:i:s 格式
-         * @param   {string}  date 表單的日期時間值
-         * @returns {string}       符合 Y-m-d H:i:s 格式的日期時間字串
+         * 將表單 datetime 項的值轉成 `Y-m-d H:i:s (milli = false)` 或 `Y-m-d H:i:s.u (milli = true)` 格式
+         * @param   {string}  date  表單的日期時間值
+         * @param   {number}  s     指定秒
+         * @param   {number}  ms    指定毫秒
+         * @param   {boolean} milli 是否輸出毫秒
+         * @returns {string}        符合 `Y-m-d H:i:s(.u)` 格式的日期時間字串
          */
-        formDateFormat: function(date)
+        formDateFormat: function(date, s = 0, ms = 0, milli = false)
         {
             const ymdhis = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01]) ([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-                ymdthi = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d)$/,
-                ymdthis = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-                ymdthisu = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.\d{3}$/;
+                  ymdthi = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d)$/,
+                  ymdthis = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
+                  ymdthisu = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.\d{3}$/;
+        
+            let snum = parseInt(s),
+                msnum = parseInt(ms),
+                second, millisecond;
             
-            switch (true)
-            {
-                case (ymdhis.test(date)):
-                    return date;
-
-                case (ymdthi.test(date)):
-                    return date.replace('T', ' ') + ':00';
+            // 指定秒數
+            switch (true) {
+                case (snum >= 60):
+                    second = '59';
+                    break;
                 
-                case (ymdthis.test(date)):
-                    return date.replace('T', ' ');
-                
-                case (ymdthisu.test(date)):
-                    return date.replace('T', ' ').replace(/\.\d{3}/, '');
-
+                case (snum >= 0):
+                    second = padding(snum, '0', 2);
+                    break;
+        
                 default:
-                    return null;
+                    second = '00';
+                    break;
+            }
+        
+            // 指定毫秒數
+            switch (true) {
+                case (msnum >= 1000):
+                    millisecond = '999';
+                    break;
+        
+                case (msnum >= 0):
+                    millisecond = padding(msnum, '0', 3);
+                    break;
+        
+                default:
+                    millisecond = '000';
+                    break;
+            }
+        
+            // 輸出
+            switch (milli)
+            {
+                case true:
+                    switch (true) {
+                        case (ymdhis.test(date)):
+                            return date + '.' + millisecond;
+        
+                        case (ymdthi.test(date)):
+                            return date.replace('T', ' ') + ':' + second + '.' + millisecond;
+                        
+                        case (ymdthis.test(date)):
+                            return date.replace('T', ' ') + '.' + millisecond;
+                        
+                        case (ymdthisu.test(date)):
+                            return date.replace('T', ' ');
+        
+                        default:
+                            return null;
+                    }
+                    break;
+        
+                default:
+                    switch (true) {
+                        case (ymdhis.test(date)):
+                            return date;
+        
+                        case (ymdthi.test(date)):
+                            return date.replace('T', ' ') + ':' + second;
+                        
+                        case (ymdthis.test(date)):
+                            return date.replace('T', ' ');
+                        
+                        case (ymdthisu.test(date)):
+                            return date.replace('T', ' ').replace(/\.\d{3}/, '');
+        
+                        default:
+                            return null;
+                    }
+                    break;
             }
         }
 
