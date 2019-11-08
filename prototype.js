@@ -8,11 +8,14 @@ Element.prototype.removeAllChildren = function() {
 };
 
 /**
- * 清空物件（在 `Object.prototype` 中添加的方法）
+ * 清空物件（透過 `Object.defineProperty` 在 `Object.prototype` 中添加的方法，ES5 以後適用）
  */
-Object.prototype.clear = function() {
-    let obj = this;
-    for (let key in obj) {
-        delete obj[key];
-    }
-};
+Object.defineProperty(Object.prototype, 'removeAllProperties', {
+    value: function() {
+        let obj = this;
+        for (let key in obj) {
+            delete obj[key];
+        }
+    },
+    enumerable : false
+});
