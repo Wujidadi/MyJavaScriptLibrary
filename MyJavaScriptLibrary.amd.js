@@ -497,6 +497,38 @@ define(() => {
 
                 return str;
             }
+        },
+
+
+        /**
+         * 將表單 datetime 項的值轉成標準 Y-m-d H:i:s 格式
+         * @param   {string}  date 表單的日期時間值
+         * @returns {string}       符合 Y-m-d H:i:s 格式的日期時間字串
+         */
+        formDateFormat: function(date)
+        {
+            const ymdhis = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01]) ([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
+                ymdthi = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d)$/,
+                ymdthis = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
+                ymdthisu = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.\d{3}$/;
+            
+            switch (true)
+            {
+                case (ymdhis.test(date)):
+                    return date;
+
+                case (ymdthi.test(date)):
+                    return date.replace('T', ' ') + ':00';
+                
+                case (ymdthis.test(date)):
+                    return date.replace('T', ' ');
+                
+                case (ymdthisu.test(date)):
+                    return date.replace('T', ' ').replace(/\.\d{3}/, '');
+
+                default:
+                    return null;
+            }
         }
 
     };

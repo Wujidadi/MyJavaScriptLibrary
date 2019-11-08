@@ -10,12 +10,17 @@
         <div id="testfield_2"></div>
     </main>
 
-    <script src="_require.min.js" data-main="amd-script"></script>
+    <!-- <script src="_require.min.js" data-main="amd-script"></script> -->
+    <script src="MyJavaScriptLibrary.js"></script>
     <script src="prototype.js"></script>
     <script src="timeout.js"></script>
-    <!-- <script src="MyJavaScriptLibrary.js"></script> -->
     <script>
         const tf = document.getElementById('test-field');
+
+        let date1 = '2019-07-01 12:23:45',
+            date2 = '2019-07-01T12:23',
+            date3 = '2019-07-01T12:23:45',
+            date4 = '2019-07-01T12:23:45.678';
         // let originalText = 200000;
         // let paddingText = padding(originalText, '0', 6, 'front');
         // let dateText = countDateCalendarManner(originalText);
