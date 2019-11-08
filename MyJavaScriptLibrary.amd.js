@@ -2,7 +2,11 @@ define(() => {
 
     return {
 
-        /* 依據年、月、日格式計算日數，月、日部分使用一般曆法風格 */
+        /**
+         * 依據年、月、日格式計算日數，月、日部分使用一般曆法風格
+         * @param   {number} d 日數
+         * @returns {string}   符合年、月、日格式的日期字串
+         */
         countDateCalendarManner: function(d)
         {
             /* 強制轉換輸入日數為整數，並令日期從 0 開始計數，以利後續換算 */
@@ -183,7 +187,12 @@ define(() => {
         },
 
 
-        /* 將時間戳轉換為 "Y-m-d H:i:s"（ms = false）或 "Y-m-d H:i:s.u"（ms = true）格式 */
+        /**
+         * 將時間戳轉換為 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式
+         * @param   {number}  time 時間戳
+         * @param   {boolean} ms   是否輸出毫秒（預設值 = false）
+         * @returns {string}       時間字串
+         */
         dateFormat: function(time, ms = false)
         {
             let date = new Date(time),
@@ -206,7 +215,11 @@ define(() => {
         },
 
 
-        /* 將 "Y-m-d H:i:s"（ms = false）或 "Y-m-d H:i:s.u"（ms = true）格式的時間轉換為 13 位數時間戳 */
+        /**
+         * 將 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式的時間轉換為 13 位數時間戳
+         * @param   {string} date 時間字串
+         * @returns {number}      時間戳
+         */
         dateStamp: function(date)
         {
             if (date.length == 19)
@@ -226,7 +239,13 @@ define(() => {
         },
 
 
-        /* 轉換度分秒格式的度數為小數點格式 */
+        /**
+         * 轉換度分秒格式的度數為小數點格式
+         * @param   {number} degree 度
+         * @param   {number} minute 分
+         * @param   {number} second 秒
+         * @returns {number}        小數點格式度數
+         */
         degFull: function(degree, minute, second)
         {
             try
@@ -254,7 +273,11 @@ define(() => {
         },
 
 
-        /* 轉換小數點格式的度數為度分秒格式 */
+        /**
+         * 轉換小數點格式的度數為度分秒格式
+         * @param   {number}       degree 小數點格式度數
+         * @returns {degreeObject}        度、分、秒值物件
+         */
         degMinSec: function(degree)
         {
             let p  = (degree >= 0) ? 1 : -1,
@@ -272,7 +295,19 @@ define(() => {
         },
 
 
-        /* 取得 URL 中的 GET 參數 */
+        /**
+         * degMinSec 返回的度、分、秒值物件
+         * @typedef  {object} degreeObject
+         * @property {number} degree 度
+         * @property {number} minute 分
+         * @property {number} second 秒
+         */
+
+
+        /** 取得 URL 中的 GET 參數
+         * @param   {string}                   param 參數名稱
+         * @returns {string|{key:string}|null}       參數值字串、物件或空值
+         */
         getParameter: function(param)
         {
             let search = location.search.substr(1),
@@ -318,7 +353,7 @@ define(() => {
                         }
                     }
                 }
-                // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空字串
+                // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空值
                 else
                 {
                     return null;
@@ -327,7 +362,11 @@ define(() => {
         },
 
 
-        /* 給定一維物件，轉為 URL GET 參數 */
+        /**
+         * 給定一維物件，轉為 URL GET 參數
+         * @param   {{[key:any]}} paramObj GET 參數物件
+         * @returns {string}               GET 參數字串
+         */
         packParameter: function(paramObj)
         {
             let keys = Object.keys(paramObj),
@@ -348,7 +387,14 @@ define(() => {
         },
 
 
-        /* 依據指定的字元、數量及方向，在輸入字串的前或後填補字元 */
+        /**
+         * 依據指定的字元、數量及方向，在輸入字串的前或後填補字元
+         * @param   {string} str       輸入字串
+         * @param   {string} char      填補字元
+         * @param   {number} num       填補數量
+         * @param   {string} direction 填補方向（預設值 = 'left'）
+         * @returns {string}           填補結果
+         */
         padding: function(str, char, num, direction = 'left')
         {
             let dir = direction.toLowerCase(),
@@ -387,7 +433,13 @@ define(() => {
         },
 
 
-        /* 產生指定區間的亂數 */
+        /**
+         * 產生指定區間的亂數
+         * @param   {number} floor 下限（預設值 = 0）
+         * @param   {number} ceil  上限（預設值 = 1）
+         * @returns {number}       結果亂數
+         * @throws                 下限大於上限或其他異常狀況時拋出錯誤
+         */
         randNum: function(floor = 0, ceil = 1)
         {
             try {
@@ -405,7 +457,14 @@ define(() => {
         },
 
 
-        /* 產生由數字或數字 + 英文字母組成的隨機字串，caps 為 true 時等於偽 62 進位隨機亂數 */
+        /**
+         * 產生由數字或數字 + 英文字母組成的隨機字串，radix 為 36 且 caps 為 true 時等於偽 62 進位隨機亂數
+         * @param   {number}  radix 進位制
+         * @param   {number}  len   輸出字串長度
+         * @param   {boolean} caps  是否包含大寫字元（預設值 = false）
+         * @returns {string}        結果亂數（字串型態）
+         * @throws                  進位制不在 2～36 範圍內時拋出錯誤
+         */
         randStr: function(radix, len, caps = false)
         {
             if (radix < 2 || radix > 36)
@@ -438,16 +497,8 @@ define(() => {
 
                 return str;
             }
-        },
-
-
-        /* 清空所有子元素 */
-        Element.prototype.removeAllChildren: function() {
-            while (this.firstChild) {
-                this.removeChild(this.firstChild);
-            }
         }
 
-    }
+    };
 
 });
