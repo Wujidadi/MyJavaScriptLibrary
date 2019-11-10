@@ -587,3 +587,67 @@ function formDateFormat(date, s = 0, ms = 0, milli = false)
             break;
     }
 }
+
+
+/**
+ * 輸入 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串，將其轉為 Date 物件（可接受西元前日期）
+ * @param   {string} dateString 符合 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串
+ * @returns {{}}                Date 物件
+ */
+function parseDate(dateString)
+{
+    const CE = /^(CE|AD|\+)?\d{1,}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])( ([01]\d|2[0-3]):([0-5]\d):([0-5]\d))?$/,
+          BCE = /^(BCE|BC|-)?\d{1,}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])( ([01]\d|2[0-3]):([0-5]\d):([0-5]\d))?$/;
+
+    let mode,
+        date = '', year, month, day,
+        time = '', hour, minute, second;
+
+    if (CE.test(dateString)) {
+        mode = 'CE';
+    } else if (BCE.test(dateString)) {
+        mode = 'BCE';
+    } else {
+        mode = 'Invalid';
+    }
+
+    if (mode !== 'Invalid') {
+        let string = dateString.split(' ');
+
+        date = string[0];
+
+        let s = 0;
+        // 年份以負號開頭時，擷取日期值應從 index 1 開始
+        if (date.indexOf('-') == 0) {
+            s++;
+        }
+        if (s == 0) {
+            // 去除年份開頭的 BCE、BC、CE、AD
+            date = date.replace(/(BCE|BC|CE|AD)/, '');
+            year = parseInt(date.split('-')[s++]);
+        } else {
+            // 年份以負號開頭時，擷取數字部分後要再把負號加在前面
+            year = parseInt('-' + date.split('-')[s++]);
+        }
+        month = parseInt(date.split('-')[s++]) - 1;
+        day   = parseInt(date.split('-')[s++]);
+
+        if (string.length > 1) {
+            time = string[1];
+            hour   = parseInt(time.split(':')[0]);
+            minute = parseInt(time.split(':')[1]);
+            second = parseInt(time.split(':')[2]);
+        } else {
+            hour   = 0;
+            minute = 0;
+            second = 0;
+        }
+    }
+
+    // console.log(year, month, day, hour, minute, second);
+
+    let dateObj = new Date(year, month, day, hour, minute, second);
+    dateObj.setFullYear(year);
+
+    return dateObj;
+}
