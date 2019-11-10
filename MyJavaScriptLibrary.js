@@ -646,8 +646,21 @@ function parseDate(dateString)
 
     // console.log(year, month, day, hour, minute, second);
 
-    let dateObj = new Date(year, month, day, hour, minute, second);
-    dateObj.setFullYear(year);
+    if (typeof year   !== 'undefined' &&
+        typeof month  !== 'undefined' &&
+        typeof day    !== 'undefined' &&
+        typeof hour   !== 'undefined' &&
+        typeof minute !== 'undefined' &&
+        typeof second !== 'undefined')
+    {
+        let dateObj = new Date(year, month, day, hour, minute, second);
+        dateObj.setFullYear(year);
 
-    return dateObj;
+        return dateObj;
+    }
+    // 年月日時分秒任一獲取失敗或未定義，則返回基於當前時間的 Date 物件
+    else
+    {
+        return new Date();
+    }
 }
