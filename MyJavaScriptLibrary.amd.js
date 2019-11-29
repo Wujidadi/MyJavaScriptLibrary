@@ -193,7 +193,7 @@ define(() => {
          * @param   {boolean} ms   是否輸出毫秒（預設值 = false）
          * @returns {string}       時間字串
          */
-        dateFormat: function(time, ms = false)
+        dateFormat: function(time = new Date(), ms = false)
         {
             let date = new Date(time),
                 y = date.getFullYear(),

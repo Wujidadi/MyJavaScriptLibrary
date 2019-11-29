@@ -189,7 +189,7 @@ function countDateCalendarManner(d)
  * @param   {boolean} ms   是否輸出毫秒（預設值 = false）
  * @returns {string}       時間字串
  */
-function dateFormat(time, ms = false)
+function dateFormat(time = new Date(), ms = false)
 {
     let date = new Date(time),
         y = date.getFullYear(),
