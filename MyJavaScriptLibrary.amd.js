@@ -197,11 +197,11 @@ define(() => {
         {
             let date = new Date(time),
                 y = date.getFullYear(),
-                m = padding(date.getMonth() + 1, '0', 2),
-                d = padding(date.getDate(), '0', 2),
-                h = padding(date.getHours(), '0', 2),
-                i = padding(date.getMinutes(), '0', 2),
-                s = padding(date.getSeconds(), '0', 2);
+                m = this.padding(date.getMonth() + 1, '0', 2),
+                d = this.padding(date.getDate(), '0', 2),
+                h = this.padding(date.getHours(), '0', 2),
+                i = this.padding(date.getMinutes(), '0', 2),
+                s = this.padding(date.getSeconds(), '0', 2);
 
             if (!ms)
             {
@@ -209,7 +209,7 @@ define(() => {
             }
             else
             {
-                let u = padding(date.getMilliseconds(), '0', 3);
+                let u = this.padding(date.getMilliseconds(), '0', 3);
                 return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s + '.' + u;
             }
         },
@@ -220,7 +220,7 @@ define(() => {
          * @param   {string} date 時間字串
          * @returns {number}      時間戳
          */
-        dateStamp: function(date)
+        dateStamp: function(date = this.dateFormat())
         {
             if (date.length == 19)
             {
@@ -526,7 +526,7 @@ define(() => {
                     break;
                 
                 case (snum >= 0):
-                    second = padding(snum, '0', 2);
+                    second = this.padding(snum, '0', 2);
                     break;
         
                 default:
@@ -541,7 +541,7 @@ define(() => {
                     break;
         
                 case (msnum >= 0):
-                    millisecond = padding(msnum, '0', 3);
+                    millisecond = this.padding(msnum, '0', 3);
                     break;
         
                 default:

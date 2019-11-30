@@ -1,5 +1,5 @@
 /* 宣告全域變數及常數 */
-let myLib;
+let MyLib;
 
 /* 設定 RequireJS */
 require.config({
@@ -9,6 +9,6 @@ require.config({
 });
 
 /* RequireJS */
-require(["mylib"], function(MyLib) {
-    myLib = MyLib;
+require(["mylib"], function(mylib) {
+    MyLib = mylib;
 });

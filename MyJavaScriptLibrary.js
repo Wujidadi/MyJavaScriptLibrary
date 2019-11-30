@@ -216,7 +216,7 @@ function dateFormat(time = new Date(), ms = false)
  * @param   {string} date 時間字串
  * @returns {number}      時間戳
  */
-function dateStamp(date)
+function dateStamp(date = dateFormat())
 {
     if (date.length == 19)
     {
