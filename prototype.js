@@ -17,5 +17,5 @@ Object.defineProperty(Object.prototype, 'removeAllProperties', {
             delete obj[key];
         }
     },
-    enumerable : false
+    enumerable: false
 });
