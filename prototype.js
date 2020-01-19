@@ -1,4 +1,27 @@
 /**
+ * 將已轉成字串的秒數轉換為 HH:MM:SS 格式
+ * @returns {string} HH:MM:SS 格式的秒數
+ */
+String.prototype.toHHMMSS = function() {
+    let ProtoSecond = parseInt(this, 10),
+        Hour = Math.floor(ProtoSecond / 3600),
+        Minute = Math.floor((ProtoSecond - (Hour * 3600)) / 60),
+        Second = ProtoSecond - (Hour * 3600) - (Minute * 60);
+
+    if (Hour < 10) {
+        Hour = '0' + Hour;
+    }
+    if (Minute < 10) {
+        Minute = '0' + Minute;
+    }
+    if (Second < 10) {
+        Second = '0' + Second;
+    }
+
+    return Hour + ':' + Minute + ':' + Second;
+}
+
+/**
  * 清空所有子元素（在 `Element.prototype` 中添加的方法）
  */
 Element.prototype.removeAllChildren = function() {
