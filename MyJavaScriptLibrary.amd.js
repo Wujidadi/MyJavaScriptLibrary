@@ -667,6 +667,28 @@ define(() => {
             {
                 return new Date();
             }
+        },
+
+
+        /**
+         * 指定元素，壓縮內部 HTML 碼
+         * @param {string} element 待壓縮的元素
+         */
+        compressHTML: function(element)
+        {
+            let elHtml = document.querySelector(element).innerHTML;
+
+            elHtml = elHtml.replace(/> /g, '>&nbsp;');
+            elHtml = elHtml.replace(/ \n/g, '&nbsp;');
+            elHtml = elHtml.replace(/&nbsp; +/g, '&nbsp;');
+            elHtml = elHtml.replace(/^\s+/g, '');
+            elHtml = elHtml.replace(/>\s+</g, '><');
+            elHtml = elHtml.replace(/>\s+([^\s<])/g, '>$1');
+            elHtml = elHtml.replace(/([^\s>])\n\s*/g, '$1');
+            elHtml = elHtml.replace(/\s$/g, '');
+            elHtml = elHtml.replace(/\n\s+$/g, '');
+
+            document.querySelector(element).innerHTML = elHtml;
         }
 
     };
