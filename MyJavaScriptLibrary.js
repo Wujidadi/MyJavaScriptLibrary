@@ -715,7 +715,7 @@ function base10to62(number)
 /**
  * 62 進位數字轉換為 10 進制
  * @param  {string|number} number 待轉換為 10 進制的 62 進位數字
- * @return {number}        轉換完畢的 10 進位數字
+ * @return {number}               轉換完畢的 10 進位數字
  */
 function base62to10(number)
 {
@@ -732,4 +732,48 @@ function base62to10(number)
     }
 
     return originNumber;
+}
+
+
+/**
+ * 產生帶時間戳的 62 進位字串（時間戳向左補滿 8 位數）
+ * @param  {number} len 轉出字串長度
+ * @return {string}     轉換完畢的 62 進位字串
+ */
+function timedBase62(len)
+{
+    let time = new Date().getTime(),
+        timeBase62 = padding(base10to62(time), '0', 8),
+        length = timeBase62.length,
+        paddingDigit = Number(len) - length,
+        paddingStr = '';
+
+    if (paddingDigit > 0) {
+        paddingStr = randStr(36, paddingDigit, true);
+    } else {
+        if (paddingDigit >= -length) {
+            timeBase62 = timeBase62.substr(0, length + paddingDigit);
+        }
+    }
+
+    return timeBase62 + paddingStr;
+}
+
+
+/**
+ * 將帶時間戳的 62 進位字串（最左 8 位數視為時間戳）轉為 `Y-m-d H:i:s.u` 格式的時間字串
+ * @param {string} base62 待轉換的 62 進位字串
+ */
+function reverseTimedBase62(base62)
+{
+    let timeBase62 = String(base62),
+        length = timeBase62.length;
+
+    if (length > 8) {
+        timeBase62 = timeBase62.substr(0, 8);
+    }
+
+    let timeBase10 = base62to10(timeBase62);
+
+    return dateFormat(timeBase10, true);
 }

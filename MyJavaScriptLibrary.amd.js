@@ -736,6 +736,50 @@ define(() => {
             }
 
             return originNumber;
+        },
+
+
+        /**
+         * 產生帶時間戳的 62 進位字串（時間戳向左補滿 8 位數）
+         * @param  {number} len 轉出字串長度
+         * @return {string}     轉換完畢的 62 進位字串
+         */
+        timedBase62: function(len)
+        {
+            let time = new Date().getTime(),
+                timeBase62 = this.padding(this.base10to62(time), '0', 8),
+                length = timeBase62.length,
+                paddingDigit = Number(len) - length,
+                paddingStr = '';
+
+            if (paddingDigit > 0) {
+                paddingStr = this.randStr(36, paddingDigit, true);
+            } else {
+                if (paddingDigit >= -length) {
+                    timeBase62 = timeBase62.substr(0, length + paddingDigit);
+                }
+            }
+
+            return timeBase62 + paddingStr;
+        },
+
+
+        /**
+         * 將帶時間戳的 62 進位字串（最左 8 位數視為時間戳）轉為 `Y-m-d H:i:s.u` 格式的時間字串
+         * @param {string} base62 待轉換的 62 進位字串
+         */
+        reverseTimedBase62: function(base62)
+        {
+            let timeBase62 = String(base62),
+                length = timeBase62.length;
+
+            if (length > 8) {
+                timeBase62 = timeBase62.substr(0, 8);
+            }
+
+            let timeBase10 = this.base62to10(timeBase62);
+
+            return this.dateFormat(timeBase10, true);
         }
 
     };
