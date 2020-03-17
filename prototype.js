@@ -17,6 +17,11 @@ const echo = console.log;
  */
 
 /**
+ * 以 underline（ 底線）作為 undefined 的簡寫
+ */
+const _ = undefined;
+
+/**
  * 將已轉成字串的秒數轉換為 HH:MM:SS 格式
  * @returns {string} HH:MM:SS 格式的秒數
  */
