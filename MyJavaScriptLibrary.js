@@ -686,3 +686,50 @@ function compressHTML(element)
 
     document.querySelector(element).innerHTML = elHtml;
 }
+
+
+/**
+ * 10 進位數字轉換為 62 進制
+ * @param  {number} number 待轉換為 62 進制的 10 進位數字
+ * @return {string}        轉換完畢的 62 進位數字
+ */
+function base10to62(number)
+{
+    let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(''),
+        radix = chars.length,
+        dividend = number,
+        arr = [];
+
+    do
+    {
+        mod = dividend % radix;
+        dividend = (dividend - mod) / radix;
+        arr.unshift(chars[mod]);
+    }
+    while (dividend);
+
+    return arr.join('');
+}
+
+
+/**
+ * 62 進位數字轉換為 10 進制
+ * @param  {string|number} number 待轉換為 10 進制的 62 進位數字
+ * @return {number}        轉換完畢的 10 進位數字
+ */
+function base62to10(number)
+{
+    let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+        radix = chars.length,
+        numStr = String(number),
+        len = numStr.length,
+        i = 0,
+        originNumber = 0;
+
+    while (i < len)
+    {
+        originNumber += Math.pow(radix, i++) * chars.indexOf(numStr.charAt(len - i) || 0);
+    }
+
+    return originNumber;
+}
