@@ -526,7 +526,7 @@ define(() => {
 
         /**
          * 取得亞毫秒時間
-         * @param {boolean} micro `true` -> 返回毫秒帶小數時間戳，`false` -> 返回整數微秒時間戳
+         * @param {boolean} micro `true` -> 返回整數微秒時間戳，`false` -> 返回毫秒帶小數時間戳
          * @return {number}       亞毫秒時間
          */
         microTimestamp: function(micro = false)
@@ -777,7 +777,7 @@ define(() => {
 
 
         /**
-         * 將帶時間戳的 62 進位字串（最左 8 位數視為時間戳）轉為 `Y-m-d H:i:s.u` 格式的時間字串
+         * 將帶時間戳的 62 進位字串（最左 10 位數視為時間戳）轉為 `Y-m-d H:i:s.u` 格式的時間字串
          * @param {string} base62 待轉換的 62 進位字串
          */
         reverseTimedBase62: function(base62)
@@ -785,31 +785,34 @@ define(() => {
             let timeBase62 = String(base62),
                 length = timeBase62.length;
 
-            if (length > 8) {
-                timeBase62 = timeBase62.substr(0, 8);
+            if (length > 10) {
+                timeBase62 = timeBase62.substr(0, 10);
             }
 
-            let timeBase10 = this.base62to10(timeBase62);
+            let timeBase10 = String(base62to10(timeBase62)),
+                microsecond = timeBase10.substr(-6),
+                timestamp = Number(timeBase10.substr(0, timeBase10.length - 3)),
+                date = dateFormat(timestamp) + '.' + microsecond;
 
-            return this.dateFormat(timeBase10, true);
+            return date;
         },
 
 
         /**
-         * 產生帶時間戳的 62 進位字串（時間戳向左補滿 8 位數）
+         * 產生帶時間戳的 62 進位字串（時間戳向左補滿 10 位數）
          * @param  {number} len 轉出字串長度
          * @return {string}     轉換完畢的 62 進位字串
          */
         timedBase62: function(len)
         {
-            let time = new Date().getTime(),
-                timeBase62 = this.padding(this.base10to62(time), '0', 8),
+            let time = microTimestamp(true),
+                timeBase62 = padding(base10to62(time), '0', 10),
                 length = timeBase62.length,
                 paddingDigit = Number(len) - length,
                 paddingStr = '';
 
             if (paddingDigit > 0) {
-                paddingStr = this.randStr(36, paddingDigit, true);
+                paddingStr = randStr(36, paddingDigit, true);
             } else {
                 if (paddingDigit >= -length) {
                     timeBase62 = timeBase62.substr(0, length + paddingDigit);
