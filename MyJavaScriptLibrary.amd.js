@@ -3,6 +3,75 @@ define(() => {
     return {
 
         /**
+         * 10 進位數字轉換為 62 進制
+         * @param  {number} number 待轉換為 62 進制的 10 進位數字
+         * @return {string}        轉換完畢的 62 進位數字
+         */
+        base10to62: function(number)
+        {
+            let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(''),
+                radix = chars.length,
+                dividend = number,
+                arr = [];
+
+            do
+            {
+                mod = dividend % radix;
+                dividend = (dividend - mod) / radix;
+                arr.unshift(chars[mod]);
+            }
+            while (dividend);
+
+            return arr.join('');
+        },
+
+
+        /**
+         * 62 進位數字轉換為 10 進制
+         * @param  {string|number} number 待轉換為 10 進制的 62 進位數字
+         * @return {number}        轉換完畢的 10 進位數字
+         */
+        base62to10: function(number)
+        {
+            let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+                radix = chars.length,
+                numStr = String(number),
+                len = numStr.length,
+                i = 0,
+                originNumber = 0;
+
+            while (i < len)
+            {
+                originNumber += Math.pow(radix, i++) * chars.indexOf(numStr.charAt(len - i) || 0);
+            }
+
+            return originNumber;
+        },
+
+
+        /**
+         * 指定元素，壓縮內部 HTML 碼
+         * @param {string} element 待壓縮的元素
+         */
+        compressHTML: function(element)
+        {
+            let elHtml = document.querySelector(element).innerHTML;
+
+            elHtml = elHtml.replace(/> /g, '>&nbsp;');
+            elHtml = elHtml.replace(/ \n/g, '&nbsp;');
+            elHtml = elHtml.replace(/&nbsp; +/g, '&nbsp;');
+            elHtml = elHtml.replace(/^\s+/g, '');
+            elHtml = elHtml.replace(/>\s+</g, '><');
+            elHtml = elHtml.replace(/>\s+([^\s<])/g, '>$1');
+            elHtml = elHtml.replace(/([^\s>])\n\s*/g, '$1');
+            elHtml = elHtml.replace(/\s$/g, '');
+            elHtml = elHtml.replace(/\n\s+$/g, '');
+
+            document.querySelector(element).innerHTML = elHtml;
+        },
+
+
+        /**
          * 依據年、月、日格式計算日數，月、日部分使用一般曆法風格
          * @param   {number} d 日數
          * @returns {string}   符合年、月、日格式的日期字串
@@ -296,211 +365,6 @@ define(() => {
 
 
         /**
-         * degMinSec 返回的度、分、秒值物件
-         * @typedef  {object} degreeObject
-         * @property {number} degree 度
-         * @property {number} minute 分
-         * @property {number} second 秒
-         */
-
-
-        /** 取得 URL 中的 GET 參數
-         * @param   {string}                   param 參數名稱
-         * @returns {string|{key:string}|null}       參數值字串、物件或空值
-         */
-        getParameter: function(param)
-        {
-            let search = location.search.substr(1),
-                paramString = search.split('&'),
-                paramParse, key, val,
-                paramObj = {};
-
-            // 未指定特定參數時，返回所有參數（物件）
-            if (param === undefined)
-            {
-                // GET 參數字串長度大於 1（問號本身占 1 字元）才進行解析
-                if (search.length > 1)
-                {
-                    for (let i = 0; i < paramString.length; i++)
-                    {
-                        paramParse = paramString[i].split('=');
-                        key = paramParse[0];
-                        val = paramParse[1];
-                        paramObj[key] = val;
-                    }
-                    return paramObj;
-                }
-                // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空物件
-                else
-                {
-                    return {};
-                }
-            }
-            // 指定具體參數時，返回單一參數的值（字串）
-            else
-            {
-                // GET 參數字串長度大於 1（問號本身占 1 字元）才進行解析
-                if (search.length > 1)
-                {
-                    for (let i = 0; i < paramString.length; i++)
-                    {
-                        paramParse = paramString[i].split('=');
-                        key = paramParse[0];
-                        val = paramParse[1];
-                        if (key == param)
-                        {
-                            return val;
-                        }
-                    }
-                }
-                // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空值
-                else
-                {
-                    return null;
-                }
-            }
-        },
-
-
-        /**
-         * 給定一維物件，轉為 URL GET 參數
-         * @param   {{[key:any]}} paramObj GET 參數物件
-         * @returns {string}               GET 參數字串
-         */
-        packParameter: function(paramObj)
-        {
-            let keys = Object.keys(paramObj),
-                paramArray = [],
-                paramString = '';
-
-            keys.forEach(function(key)
-            {
-                paramArray.push(`${key}=${paramObj[key]}`);
-            });
-
-            if (paramArray.length > 0)
-            {
-                paramString = '?' + paramArray.join('&');
-            }
-
-            return paramString;
-        },
-
-
-        /**
-         * 依據指定的字元、數量及方向，在輸入字串的前或後填補字元
-         * @param   {string} str       輸入字串
-         * @param   {string} char      填補字元
-         * @param   {number} num       填補數量
-         * @param   {string} direction 填補方向（預設值 = 'left'）
-         * @returns {string}           填補結果
-         */
-        padding: function(str, char, num, direction = 'left')
-        {
-            let dir = direction.toLowerCase(),
-                i = 0,
-                dif = 0,
-                tar = '',
-                len = str.toString().length;
-
-            if (len < num)
-            {
-                dif = num - len;
-                for (i = 0; i < dif; i++)
-                {
-                    tar += char;
-                }
-                switch (dir)
-                {
-                    default:
-                    case 'left':
-                    case 'front':
-                    case 'before':
-                    case 'default':
-                        tar += str.toString();
-                        break;
-
-                    case 'right':
-                    case 'after':
-                    case 'back':
-                        tar = str.toString() + tar;
-                        break;
-                }
-                return tar;
-            }
-
-            return str;
-        },
-
-
-        /**
-         * 產生指定區間的亂數
-         * @param   {number} floor 下限（預設值 = 0）
-         * @param   {number} ceil  上限（預設值 = 1）
-         * @returns {number}       結果亂數
-         * @throws                 下限大於上限或其他異常狀況時拋出錯誤
-         */
-        randNum: function(floor = 0, ceil = 1)
-        {
-            try {
-                if (ceil < floor)
-                {
-                    throw "Ceil is less than floor!";
-                }
-                let rand = Math.random() * (ceil - floor);
-                return floor + rand;
-            }
-            catch (err)
-            {
-                console.error(err);
-            }
-        },
-
-
-        /**
-         * 產生由數字或數字 + 英文字母組成的隨機字串，radix 為 36 且 caps 為 true 時等於偽 62 進位隨機亂數
-         * @param   {number}  radix 進位制
-         * @param   {number}  len   輸出字串長度
-         * @param   {boolean} caps  是否包含大寫字元（預設值 = false）
-         * @returns {string}        結果亂數（字串型態）
-         * @throws                  進位制不在 2～36 範圍內時拋出錯誤
-         */
-        randStr: function(radix, len, caps = false)
-        {
-            if (radix < 2 || radix > 36)
-            {
-                console.log("The radix must be between 2 and 36.");
-                return undefined;
-            }
-            else
-            {
-                let str = "",
-                    s = Math.random().toString(radix).split(".")[1];
-
-                while (s.length < len)
-                {
-                    s += Math.random().toString(radix).split(".")[1];
-                }
-                s = s.substring(0, len);
-
-                for (let i = 0; i < s.length; i++)
-                {
-                    if (/[a-z]/.test(s[i]) && caps && parseInt(Math.random() * 2))
-                    {
-                        str += s[i].toUpperCase();
-                    }
-                    else
-                    {
-                        str += s[i];
-                    }
-                }
-
-                return str;
-            }
-        },
-
-
-        /**
          * 將表單 datetime 項的值轉成 `Y-m-d H:i:s (milli = false)` 或 `Y-m-d H:i:s.u (milli = true)` 格式
          * @param   {string}  date  表單的日期時間值
          * @param   {number}  s     指定秒
@@ -594,6 +458,181 @@ define(() => {
 
 
         /**
+         * degMinSec 返回的度、分、秒值物件
+         * @typedef  {object} degreeObject
+         * @property {number} degree 度
+         * @property {number} minute 分
+         * @property {number} second 秒
+         */
+
+
+        /** 取得 URL 中的 GET 參數
+         * @param   {string}                   param 參數名稱
+         * @returns {string|{key:string}|null}       參數值字串、物件或空值
+         */
+        getParameter: function(param)
+        {
+            let search = location.search.substr(1),
+                paramString = search.split('&'),
+                paramParse, key, val,
+                paramObj = {};
+
+            // 未指定特定參數時，返回所有參數（物件）
+            if (param === undefined)
+            {
+                // GET 參數字串長度大於 1（問號本身占 1 字元）才進行解析
+                if (search.length > 1)
+                {
+                    for (let i = 0; i < paramString.length; i++)
+                    {
+                        paramParse = paramString[i].split('=');
+                        key = paramParse[0];
+                        val = paramParse[1];
+                        paramObj[key] = val;
+                    }
+                    return paramObj;
+                }
+                // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空物件
+                else
+                {
+                    return {};
+                }
+            }
+            // 指定具體參數時，返回單一參數的值（字串）
+            else
+            {
+                // GET 參數字串長度大於 1（問號本身占 1 字元）才進行解析
+                if (search.length > 1)
+                {
+                    for (let i = 0; i < paramString.length; i++)
+                    {
+                        paramParse = paramString[i].split('=');
+                        key = paramParse[0];
+                        val = paramParse[1];
+                        if (key == param)
+                        {
+                            return val;
+                        }
+                    }
+                }
+                // GET 參數字串長度小於等於 1（空字串或只有問號）時返回空值
+                else
+                {
+                    return null;
+                }
+            }
+        },
+
+
+        /**
+         * 取得亞毫秒時間
+         * @param {boolean} micro `true` -> 返回毫秒帶小數時間戳，`false` -> 返回整數微秒時間戳
+         * @return {number}       亞毫秒時間
+         */
+        microTimestamp: function(micro = false)
+        {
+            let timestamp = performance.timing.navigationStart + performance.now();
+
+            if (micro)
+            {
+                return timestamp * 1000;
+            }
+            else
+            {
+                return timestamp;
+            }
+        },
+
+
+        /**
+         * 取得帶微秒值的時間字串（`Y-m-d H:i:s.u` 格式）
+         */
+        microtime: function()
+        {
+            let timestamp = String(this.microTimestamp(true)),
+                length = timestamp.length,
+                microsecond = timestamp.substr(-6);
+
+            timestamp = Number(timestamp.substr(0, length - 3));
+
+            let date = this.dateFormat(timestamp) + '.' + microsecond;
+
+            return date;
+        },
+
+
+        /**
+         * 給定一維物件，轉為 URL GET 參數
+         * @param   {{[key:any]}} paramObj GET 參數物件
+         * @returns {string}               GET 參數字串
+         */
+        packParameter: function(paramObj)
+        {
+            let keys = Object.keys(paramObj),
+                paramArray = [],
+                paramString = '';
+
+            keys.forEach(function(key)
+            {
+                paramArray.push(`${key}=${paramObj[key]}`);
+            });
+
+            if (paramArray.length > 0)
+            {
+                paramString = '?' + paramArray.join('&');
+            }
+
+            return paramString;
+        },
+
+
+        /**
+         * 依據指定的字元、數量及方向，在輸入字串的前或後填補字元
+         * @param   {string} str       輸入字串
+         * @param   {string} char      填補字元
+         * @param   {number} num       填補數量
+         * @param   {string} direction 填補方向（預設值 = 'left'）
+         * @returns {string}           填補結果
+         */
+        padding: function(str, char, num, direction = 'left')
+        {
+            let dir = direction.toLowerCase(),
+                i = 0,
+                dif = 0,
+                tar = '',
+                len = str.toString().length;
+
+            if (len < num)
+            {
+                dif = num - len;
+                for (i = 0; i < dif; i++)
+                {
+                    tar += char;
+                }
+                switch (dir)
+                {
+                    default:
+                    case 'left':
+                    case 'front':
+                    case 'before':
+                    case 'default':
+                        tar += str.toString();
+                        break;
+
+                    case 'right':
+                    case 'after':
+                    case 'back':
+                        tar = str.toString() + tar;
+                        break;
+                }
+                return tar;
+            }
+
+            return str;
+        },
+
+
+        /**
          * 輸入 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串，將其轉為 Date 物件（可接受西元前日期）
          * @param   {string} dateString 符合 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串
          * @returns {{}}                Date 物件
@@ -671,71 +710,88 @@ define(() => {
 
 
         /**
-         * 指定元素，壓縮內部 HTML 碼
-         * @param {string} element 待壓縮的元素
+         * 產生指定區間的亂數
+         * @param   {number} floor 下限（預設值 = 0）
+         * @param   {number} ceil  上限（預設值 = 1）
+         * @returns {number}       結果亂數
+         * @throws                 下限大於上限或其他異常狀況時拋出錯誤
          */
-        compressHTML: function(element)
+        randNum: function(floor = 0, ceil = 1)
         {
-            let elHtml = document.querySelector(element).innerHTML;
-
-            elHtml = elHtml.replace(/> /g, '>&nbsp;');
-            elHtml = elHtml.replace(/ \n/g, '&nbsp;');
-            elHtml = elHtml.replace(/&nbsp; +/g, '&nbsp;');
-            elHtml = elHtml.replace(/^\s+/g, '');
-            elHtml = elHtml.replace(/>\s+</g, '><');
-            elHtml = elHtml.replace(/>\s+([^\s<])/g, '>$1');
-            elHtml = elHtml.replace(/([^\s>])\n\s*/g, '$1');
-            elHtml = elHtml.replace(/\s$/g, '');
-            elHtml = elHtml.replace(/\n\s+$/g, '');
-
-            document.querySelector(element).innerHTML = elHtml;
+            try {
+                if (ceil < floor)
+                {
+                    throw "Ceil is less than floor!";
+                }
+                let rand = Math.random() * (ceil - floor);
+                return floor + rand;
+            }
+            catch (err)
+            {
+                console.error(err);
+            }
         },
 
 
         /**
-         * 10 進位數字轉換為 62 進制
-         * @param  {number} number 待轉換為 62 進制的 10 進位數字
-         * @return {string}        轉換完畢的 62 進位數字
+         * 產生由數字或數字 + 英文字母組成的隨機字串，radix 為 36 且 caps 為 true 時等於偽 62 進位隨機亂數
+         * @param   {number}  radix 進位制
+         * @param   {number}  len   輸出字串長度
+         * @param   {boolean} caps  是否包含大寫字元（預設值 = false）
+         * @returns {string}        結果亂數（字串型態）
+         * @throws                  進位制不在 2～36 範圍內時拋出錯誤
          */
-        base10to62: function(number)
+        randStr: function(radix, len, caps = false)
         {
-            let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(''),
-                radix = chars.length,
-                dividend = number,
-                arr = [];
-
-            do
+            if (radix < 2 || radix > 36)
             {
-                mod = dividend % radix;
-                dividend = (dividend - mod) / radix;
-                arr.unshift(chars[mod]);
+                console.log("The radix must be between 2 and 36.");
+                return undefined;
             }
-            while (dividend);
+            else
+            {
+                let str = "",
+                    s = Math.random().toString(radix).split(".")[1];
 
-            return arr.join('');
+                while (s.length < len)
+                {
+                    s += Math.random().toString(radix).split(".")[1];
+                }
+                s = s.substring(0, len);
+
+                for (let i = 0; i < s.length; i++)
+                {
+                    if (/[a-z]/.test(s[i]) && caps && parseInt(Math.random() * 2))
+                    {
+                        str += s[i].toUpperCase();
+                    }
+                    else
+                    {
+                        str += s[i];
+                    }
+                }
+
+                return str;
+            }
         },
 
 
         /**
-         * 62 進位數字轉換為 10 進制
-         * @param  {string|number} number 待轉換為 10 進制的 62 進位數字
-         * @return {number}        轉換完畢的 10 進位數字
+         * 將帶時間戳的 62 進位字串（最左 8 位數視為時間戳）轉為 `Y-m-d H:i:s.u` 格式的時間字串
+         * @param {string} base62 待轉換的 62 進位字串
          */
-        base62to10: function(number)
+        reverseTimedBase62: function(base62)
         {
-            let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-                radix = chars.length,
-                numStr = String(number),
-                len = numStr.length,
-                i = 0,
-                originNumber = 0;
+            let timeBase62 = String(base62),
+                length = timeBase62.length;
 
-            while (i < len)
-            {
-                originNumber += Math.pow(radix, i++) * chars.indexOf(numStr.charAt(len - i) || 0);
+            if (length > 8) {
+                timeBase62 = timeBase62.substr(0, 8);
             }
 
-            return originNumber;
+            let timeBase10 = this.base62to10(timeBase62);
+
+            return this.dateFormat(timeBase10, true);
         },
 
 
@@ -761,25 +817,6 @@ define(() => {
             }
 
             return timeBase62 + paddingStr;
-        },
-
-
-        /**
-         * 將帶時間戳的 62 進位字串（最左 8 位數視為時間戳）轉為 `Y-m-d H:i:s.u` 格式的時間字串
-         * @param {string} base62 待轉換的 62 進位字串
-         */
-        reverseTimedBase62: function(base62)
-        {
-            let timeBase62 = String(base62),
-                length = timeBase62.length;
-
-            if (length > 8) {
-                timeBase62 = timeBase62.substr(0, 8);
-            }
-
-            let timeBase10 = this.base62to10(timeBase62);
-
-            return this.dateFormat(timeBase10, true);
         }
 
     };
