@@ -285,7 +285,7 @@ define(() => {
 
 
         /**
-         * 將 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式的時間轉換為 13 位數時間戳
+         * 將 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式的時間轉換為 13（毫秒級）或 16（微秒級）位數時間戳
          * @param   {string} date 時間字串
          * @returns {number}      時間戳
          */
@@ -298,11 +298,22 @@ define(() => {
                     return new Date(date).getTime();
                 }
             }
-            else if (date.length > 20 && date.length < 24)
+            else if (date.length > 20 && date.length <= 23)
             {
                 if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,3}/.test(date))
                 {
                     return new Date(date).getTime();
+                }
+            }
+            else if (date.length > 23 && date.length <= 26)
+            {
+                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,6}/.test(date))
+                {
+                    let datetime = date.split('.')[0],
+                        decimal = date.split('.')[1],
+                        time = String(new Date(datetime).getTime()).slice(0, -3),
+                        microtime = time + decimal;
+                    return Number(microtime);
                 }
             }
         },
@@ -455,15 +466,6 @@ define(() => {
                     break;
             }
         },
-
-
-        /**
-         * degMinSec 返回的度、分、秒值物件
-         * @typedef  {object} degreeObject
-         * @property {number} degree 度
-         * @property {number} minute 分
-         * @property {number} second 秒
-         */
 
 
         /** 取得 URL 中的 GET 參數
@@ -800,13 +802,17 @@ define(() => {
 
         /**
          * 產生帶時間戳的 62 進位字串（時間戳向左補滿 10 位數）
-         * @param  {number} len 轉出字串長度
-         * @return {string}     轉換完畢的 62 進位字串
+         * @param  {number} len  轉出字串長度
+         * @param  {string} time 16 位微秒級時間戳，預設為 null，即自動取得當前時間
+         * @return {string}      轉換完畢的 62 進位字串
          */
-        timedBase62: function(len)
+        timedBase62: function(len, time = null)
         {
-            let time = microTimestamp(true),
-                timeBase62 = padding(base10to62(time), '0', 10),
+            if (time === null) {
+                time = microTimestamp(true);
+            }
+
+            let timeBase62 = padding(base10to62(time), '0', 10),
                 length = timeBase62.length,
                 paddingDigit = Number(len) - length,
                 paddingStr = '';
