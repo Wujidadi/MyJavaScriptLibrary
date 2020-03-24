@@ -55,7 +55,7 @@ String.prototype.toHHMMSS = function() {
  * 取得物件屬性數量
  * 透過 `Object.defineProperty` 在 `Object.prototype` 中添加的方法，ES5 以後適用
  */
-Object.defineProperty(Object.prototype, 'length', {
+Object.defineProperty(Object.prototype, 'objectLength', {
     get: function() {
         let obj = this,
             len = 0;
