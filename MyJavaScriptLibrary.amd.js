@@ -4,6 +4,7 @@ define(() => {
 
         /**
          * 10 進位數字轉換為 62 進制
+         *
          * @param  {number} number 待轉換為 62 進制的 10 進位數字
          * @return {string}        轉換完畢的 62 進位數字
          */
@@ -28,6 +29,7 @@ define(() => {
 
         /**
          * 62 進位數字轉換為 10 進制
+         *
          * @param  {string|number} number 待轉換為 10 進制的 62 進位數字
          * @return {number}        轉換完畢的 10 進位數字
          */
@@ -51,7 +53,9 @@ define(() => {
 
         /**
          * 指定元素，壓縮內部 HTML 碼
-         * @param {string} element 待壓縮的元素
+         *
+         * @param  {string} element 待壓縮的元素
+         * @return {string}         壓縮後的 HTML 碼
          */
         compressHTML: function(element)
         {
@@ -68,11 +72,14 @@ define(() => {
             elHtml = elHtml.replace(/\n\s+$/g, '');
 
             document.querySelector(element).innerHTML = elHtml;
+
+            return elHtml;
         },
 
 
         /**
          * 依據年、月、日格式計算日數，月、日部分使用一般曆法風格
+         *
          * @param   {number} d 日數
          * @returns {string}   符合年、月、日格式的日期字串
          */
@@ -258,6 +265,7 @@ define(() => {
 
         /**
          * 將時間戳轉換為 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式
+         *
          * @param   {number}  time 時間戳
          * @param   {boolean} ms   是否輸出毫秒（預設值 = false）
          * @returns {string}       時間字串
@@ -286,28 +294,30 @@ define(() => {
 
         /**
          * 將 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式的時間轉換為 13（毫秒級）或 16（微秒級）位數時間戳
+         *
          * @param   {string} date 時間字串
          * @returns {number}      時間戳
          */
         dateStamp: function(date = this.dateFormat())
         {
+            date = date.replace(/-/g, '/');     // Safari 及 iOS 下各瀏覽器僅支援 `Y/m/d H:i:s` 格式
             if (date.length == 19)
             {
-                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d/.test(date))
+                if (/\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d/.test(date))
                 {
                     return new Date(date).getTime();
                 }
             }
             else if (date.length > 20 && date.length <= 23)
             {
-                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,3}/.test(date))
+                if (/\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,3}/.test(date))
                 {
                     return new Date(date).getTime();
                 }
             }
             else if (date.length > 23 && date.length <= 26)
             {
-                if (/\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,6}/.test(date))
+                if (/\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]) [0-5]\d:[0-5]\d:[0-5]\d\.\d{1,6}/.test(date))
                 {
                     let datetime = date.split('.')[0],
                         decimal = date.split('.')[1],
@@ -321,6 +331,7 @@ define(() => {
 
         /**
          * 轉換度分秒格式的度數為小數點格式
+         *
          * @param   {number} degree 度
          * @param   {number} minute 分
          * @param   {number} second 秒
@@ -355,6 +366,7 @@ define(() => {
 
         /**
          * 轉換小數點格式的度數為度分秒格式
+         *
          * @param   {number}       degree 小數點格式度數
          * @returns {degreeObject}        度、分、秒值物件
          */
@@ -377,6 +389,7 @@ define(() => {
 
         /**
          * 將表單 datetime 項的值轉成 `Y-m-d H:i:s (milli = false)` 或 `Y-m-d H:i:s.u (milli = true)` 格式
+         *
          * @param   {string}  date  表單的日期時間值
          * @param   {number}  s     指定秒
          * @param   {number}  ms    指定毫秒
@@ -468,7 +481,9 @@ define(() => {
         },
 
 
-        /** 取得 URL 中的 GET 參數
+        /**
+         * 取得 URL 中的 GET 參數
+         *
          * @param   {string}                   param 參數名稱
          * @returns {string|{key:string}|null}       參數值字串、物件或空值
          */
@@ -528,8 +543,9 @@ define(() => {
 
         /**
          * 取得亞毫秒時間
-         * @param {boolean} micro `true` -> 返回整數微秒時間戳，`false` -> 返回毫秒帶小數時間戳
-         * @return {number}       亞毫秒時間
+         *
+         * @param  {boolean} micro `true` -> 返回整數微秒時間戳，`false` -> 返回毫秒帶小數時間戳
+         * @return {number}        亞毫秒時間
          */
         microTimestamp: function(micro = false)
         {
@@ -548,6 +564,8 @@ define(() => {
 
         /**
          * 取得帶微秒值的時間字串（`Y-m-d H:i:s.u` 格式）
+         *
+         * @returns {string} 帶微秒值的時間字串
          */
         microtime: function()
         {
@@ -565,8 +583,9 @@ define(() => {
 
         /**
          * 給定一維物件，轉為 URL GET 參數
-         * @param   {{[key:any]}} paramObj GET 參數物件
-         * @returns {string}               GET 參數字串
+         *
+         * @param   {{key:string}} paramObj GET 參數物件
+         * @returns {string}                GET 參數字串
          */
         packParameter: function(paramObj)
         {
@@ -589,7 +608,8 @@ define(() => {
 
 
         /**
-         * 依據指定的字元、數量及方向，在輸入字串的前或後填補字元
+         * 依據指定的字元、數量及方向，在輸入字串的前或後填補字元（不支援 both）
+         *
          * @param   {string} str       輸入字串
          * @param   {string} char      填補字元
          * @param   {number} num       填補數量
@@ -636,6 +656,7 @@ define(() => {
 
         /**
          * 輸入 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串，將其轉為 Date 物件（可接受西元前日期）
+         *
          * @param   {string} dateString 符合 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串
          * @returns {{}}                Date 物件
          */
@@ -666,10 +687,15 @@ define(() => {
                 if (date.indexOf('-') == 0) {
                     s++;
                 }
-                if (s == 0) {
+                if (s === 0) {
                     // 去除年份開頭的 BCE、BC、CE、AD
                     date = date.replace(/(BCE|BC|CE|AD)/, '');
-                    year = parseInt(date.split('-')[s++]);
+
+                    if (mode === 'BCE') {
+                        year = parseInt('-' + date.split('-')[s++]) + 1;    // 西元前模式下年份加負號，數字部分減 1
+                    } else {
+                        year = parseInt(date.split('-')[s++]);
+                    }
                 } else {
                     // 年份以負號開頭時，擷取數字部分後要再把負號加在前面
                     year = parseInt('-' + date.split('-')[s++]);
@@ -713,6 +739,7 @@ define(() => {
 
         /**
          * 產生指定區間的亂數
+         *
          * @param   {number} floor 下限（預設值 = 0）
          * @param   {number} ceil  上限（預設值 = 1）
          * @returns {number}       結果亂數
@@ -737,6 +764,7 @@ define(() => {
 
         /**
          * 產生由數字或數字 + 英文字母組成的隨機字串，radix 為 36 且 caps 為 true 時等於偽 62 進位隨機亂數
+         *
          * @param   {number}  radix 進位制
          * @param   {number}  len   輸出字串長度
          * @param   {boolean} caps  是否包含大寫字元（預設值 = false）
@@ -780,7 +808,9 @@ define(() => {
 
         /**
          * 將帶時間戳的 62 進位字串（最左 10 位數視為時間戳）轉為 `Y-m-d H:i:s.u` 格式的時間字串
-         * @param {string} base62 待轉換的 62 進位字串
+         *
+         * @param  {string} base62 待轉換的 62 進位字串
+         * @return {string}        `Y-m-d H:i:s.u` 格式的時間字串
          */
         reverseTimedBase62: function(base62)
         {
@@ -802,6 +832,7 @@ define(() => {
 
         /**
          * 產生帶時間戳的 62 進位字串（時間戳向左補滿 10 位數）
+         *
          * @param  {number} len  轉出字串長度
          * @param  {string} time 16 位微秒級時間戳，預設為 null，即自動取得當前時間
          * @return {string}      轉換完畢的 62 進位字串
