@@ -80,8 +80,8 @@ define(() => {
         /**
          * 依據年、月、日格式計算日數，月、日部分使用一般曆法風格
          *
-         * @param   {number} d 日數
-         * @returns {string}   符合年、月、日格式的日期字串
+         * @param  {number} d 日數
+         * @return {string}   符合年、月、日格式的日期字串
          */
         countDateCalendarManner: function(d)
         {
@@ -266,9 +266,9 @@ define(() => {
         /**
          * 將時間戳轉換為 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式
          *
-         * @param   {number}  time 時間戳
-         * @param   {boolean} ms   是否輸出毫秒（預設值 = false）
-         * @returns {string}       時間字串
+         * @param  {number}  time 時間戳
+         * @param  {boolean} ms   是否輸出毫秒（預設值 = false）
+         * @return {string}       時間字串
          */
         dateFormat: function(time = new Date(), ms = false)
         {
@@ -295,8 +295,8 @@ define(() => {
         /**
          * 將 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式的時間轉換為 13（毫秒級）或 16（微秒級）位數時間戳
          *
-         * @param   {string} date 時間字串
-         * @returns {number}      時間戳
+         * @param  {string} date 時間字串
+         * @return {number}      時間戳
          */
         dateStamp: function(date = this.dateFormat())
         {
@@ -332,10 +332,10 @@ define(() => {
         /**
          * 轉換度分秒格式的度數為小數點格式
          *
-         * @param   {number} degree 度
-         * @param   {number} minute 分
-         * @param   {number} second 秒
-         * @returns {number}        小數點格式度數
+         * @param  {number} degree 度
+         * @param  {number} minute 分
+         * @param  {number} second 秒
+         * @return {number}        小數點格式度數
          */
         degFull: function(degree, minute, second)
         {
@@ -367,8 +367,8 @@ define(() => {
         /**
          * 轉換小數點格式的度數為度分秒格式
          *
-         * @param   {number}       degree 小數點格式度數
-         * @returns {degreeObject}        度、分、秒值物件
+         * @param  {number}       degree 小數點格式度數
+         * @return {degreeObject}        度、分、秒值物件
          */
         degMinSec: function(degree)
         {
@@ -390,11 +390,11 @@ define(() => {
         /**
          * 將表單 datetime 項的值轉成 `Y-m-d H:i:s (milli = false)` 或 `Y-m-d H:i:s.u (milli = true)` 格式
          *
-         * @param   {string}  date  表單的日期時間值
-         * @param   {number}  s     指定秒
-         * @param   {number}  ms    指定毫秒
-         * @param   {boolean} milli 是否輸出毫秒
-         * @returns {string}        符合 `Y-m-d H:i:s(.u)` 格式的日期時間字串
+         * @param  {string}  date  表單的日期時間值
+         * @param  {number}  s     指定秒
+         * @param  {number}  ms    指定毫秒
+         * @param  {boolean} milli 是否輸出毫秒
+         * @return {string}        符合 `Y-m-d H:i:s(.u)` 格式的日期時間字串
          */
         formDateFormat: function(date, s = 0, ms = 0, milli = false)
         {
@@ -484,8 +484,8 @@ define(() => {
         /**
          * 取得 URL 中的 GET 參數
          *
-         * @param   {string}                   param 參數名稱
-         * @returns {string|{key:string}|null}       參數值字串、物件或空值
+         * @param  {string}                   param 參數名稱
+         * @return {string|{key:string}|null}       參數值字串、物件或空值
          */
         getParameter: function(param)
         {
@@ -565,7 +565,7 @@ define(() => {
         /**
          * 取得帶微秒值的時間字串（`Y-m-d H:i:s.u` 格式）
          *
-         * @returns {string} 帶微秒值的時間字串
+         * @return {string} 帶微秒值的時間字串
          */
         microtime: function()
         {
@@ -582,10 +582,122 @@ define(() => {
 
 
         /**
+         * 解析輸入的毫秒值，依轉換等級拆解為週、日、時、分、秒等單位
+         *
+         * @param  {number} ms    毫秒值
+         * @param  {string} level 轉換等級，分為週、日、時、分、秒及毫秒
+         * @return {{}}           包含週、日、時、分、秒及毫秒等單位的數值物件
+         */
+        msPart: function(ms, level = null)
+        {
+            /* 各等級時間預設值 */
+            let week = 0,
+                day = 0,
+                hour = 0,
+                minute = 0,
+                second = 0,
+                millisecond = 0;
+        
+            /** 轉換等級索引值 */
+            let levelIndex = null;
+        
+            /** 最高轉換等級 */
+            const highestLevel = 'w';   // 週
+        
+            /** 合法轉換等級陣列物件 */
+            const legalLevel = {
+                'ms': [ 'ms', 'milli', 'millis', 'millisec', 'millisecs', 'millisecond', 'milliseconds' ],
+                's':  [ 's',                     'sec',      'secs',      'second',      'seconds'      ],
+                'm':  [ 'm',                     'min',      'mins',      'minute',      'minutes'      ],
+                'h':  [ 'h',                     'hr',       'hrs',       'hour',        'hours'        ],
+                'd':  [ 'd',                                              'day',         'days'         ],
+                'w':  [ 'w',                                              'week',        'weeks'        ]
+            };
+        
+            /* 未指定轉換等級時，自動代入最高轉換等級；指定其他轉換等級時，一律先將等級字串轉小寫 */
+            level = (level === null) ? highestLevel : level.toLowerCase();
+        
+            /* 轉換等級合法時，直接賦予索引值 */
+            for (let i = 0; i < Object.keys(legalLevel).length; i++)
+            {
+                let key = Object.keys(legalLevel)[i];
+                if (legalLevel[key].indexOf(level) >= 0)
+                {
+                    levelIndex = i;
+                    break;
+                }
+            }
+        
+            /* 轉換等級非法時，以最高等級索引值代入 */
+            if (levelIndex === null)
+            {
+                levelIndex = Object.keys(legalLevel).length - 1;
+            }
+        
+            /*
+            |----------------------------------------------------------------
+            | 經過以上程序，轉換等級索引被限定在 0 與最高等級的索引值之間
+            | 便可確保無論有無指定合法 level，都能正確進行接下來的轉換
+            |----------------------------------------------------------------
+            */
+        
+            /* 指定的毫秒值為正確的數字時，將其賦予毫秒數 */
+            if (!isNaN(ms))
+            {
+                millisecond = ms;
+            }
+        
+            /* 毫秒數達到進位門檻且轉換等級為秒級以上時，計算秒數及餘下的毫秒數 */
+            if (millisecond >= 1000 && levelIndex >= 1)
+            {
+                second = Math.floor(ms / 1000);
+                millisecond = ms - second * 1000;
+            }
+        
+            /* 秒數達到進位門檻且轉換等級為分鐘級以上時，計算分鐘數及餘下的秒數 */
+            if (second >= 60 && levelIndex >= 2)
+            {
+                minute = Math.floor(second / 60);
+                second -= minute * 60;
+            }
+        
+            /* 分鐘數達到進位門檻且轉換等級為小時級以上時，計算小時數及餘下的分鐘數 */
+            if (minute >= 60 && levelIndex >= 3)
+            {
+                hour = Math.floor(minute / 60);
+                minute -= hour * 60;
+            }
+        
+            /* 小時數達到進位門檻且轉換等級為日（天）級以上時，計算天數及餘下的小時數 */
+            if (hour >= 24 && levelIndex >= 4)
+            {
+                day = Math.floor(hour / 24);
+                hour -= day * 24;
+            }
+        
+            /* 天數達到進位門檻且轉換等級為週（星期）級以上時，計算週數及餘下的天數 */
+            if (day >= 7 && levelIndex >= 5)
+            {
+                week = Math.floor(day / 7);
+                day -= week * 7;
+            }
+        
+            return {
+                'week': week,
+                'day': day,
+                'hour': hour,
+                'minute': minute,
+                'second': second,
+                'millisecond': millisecond
+            };
+        },
+
+
+        /**
          * 給定一維物件，轉為 URL GET 參數
          *
-         * @param   {{key:string}} paramObj GET 參數物件
-         * @returns {string}                GET 參數字串
+         * @param  {{key:string}} paramObj GET 參數物件
+         * @return {string}                GET 參數字串
          */
         packParameter: function(paramObj)
         {
@@ -610,11 +722,11 @@ define(() => {
         /**
          * 依據指定的字元、數量及方向，在輸入字串的前或後填補字元（不支援 both）
          *
-         * @param   {string} str       輸入字串
-         * @param   {string} char      填補字元
-         * @param   {number} num       填補數量
-         * @param   {string} direction 填補方向（預設值 = 'left'）
-         * @returns {string}           填補結果
+         * @param  {string} str       輸入字串
+         * @param  {string} char      填補字元
+         * @param  {number} num       填補數量
+         * @param  {string} direction 填補方向（預設值 = 'left'）
+         * @return {string}           填補結果
          */
         padding: function(str, char, num, direction = 'left')
         {
@@ -657,8 +769,8 @@ define(() => {
         /**
          * 輸入 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串，將其轉為 Date 物件（可接受西元前日期）
          *
-         * @param   {string} dateString 符合 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串
-         * @returns {{}}                Date 物件
+         * @param  {string} dateString 符合 `Y-m-d` 或 `Y-m-d H:i:s` 格式的日期時間字串
+         * @return {{}}                Date 物件
          */
         parseDate: function(dateString)
         {
@@ -740,10 +852,10 @@ define(() => {
         /**
          * 產生指定區間的亂數
          *
-         * @param   {number} floor 下限（預設值 = 0）
-         * @param   {number} ceil  上限（預設值 = 1）
-         * @returns {number}       結果亂數
-         * @throws                 下限大於上限或其他異常狀況時拋出錯誤
+         * @param  {number} floor 下限（預設值 = 0）
+         * @param  {number} ceil  上限（預設值 = 1）
+         * @return {number}       結果亂數
+         * @throws                下限大於上限或其他異常狀況時拋出錯誤
          */
         randNum: function(floor = 0, ceil = 1)
         {
@@ -765,11 +877,11 @@ define(() => {
         /**
          * 產生由數字或數字 + 英文字母組成的隨機字串，radix 為 36 且 caps 為 true 時等於偽 62 進位隨機亂數
          *
-         * @param   {number}  radix 進位制
-         * @param   {number}  len   輸出字串長度
-         * @param   {boolean} caps  是否包含大寫字元（預設值 = false）
-         * @returns {string}        結果亂數（字串型態）
-         * @throws                  進位制不在 2～36 範圍內時拋出錯誤
+         * @param  {number}  radix 進位制
+         * @param  {number}  len   輸出字串長度
+         * @param  {boolean} caps  是否包含大寫字元（預設值 = false）
+         * @return {string}        結果亂數（字串型態）
+         * @throws                 進位制不在 2～36 範圍內時拋出錯誤
          */
         randStr: function(radix, len, caps = false)
         {
