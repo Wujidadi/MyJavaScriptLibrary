@@ -50,6 +50,6 @@
   *caps*：是否大小寫混合，預設為 false 即全部小寫。
 
 
-## route.js
+## route.js (for Laravel)
 
 > 2020 年 10 月 29 日，於台全電機冰櫃監控專案（Taigene-Freezer-Web）中，為顧及不支援 ES6 語法的瀏覽器，加上了對 ES5 以前舊語法的支援。
