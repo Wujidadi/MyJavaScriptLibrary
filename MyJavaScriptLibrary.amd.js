@@ -293,7 +293,7 @@ define(() => {
 
 
         /**
-         * 將 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式的時間轉換為 13（毫秒級）或 16（微秒級）位數時間戳
+         * 將 `Y-m-d H:i:s (ms = false)` 或 `Y-m-d H:i:s.u (ms = true)` 格式的時間轉換為 13 位數（毫秒級）時間戳
          *
          * @param  {string} date 時間字串
          * @return {number}      時間戳
@@ -322,7 +322,17 @@ define(() => {
                     let datetime = date.split('.')[0],
                         decimal = date.split('.')[1],
                         time = String(new Date(datetime).getTime()).slice(0, -3),
-                        microtime = time + decimal;
+                        microtime = '';
+        
+                    if (decimal.length > 3)
+                    {
+                        microtime = time + decimal.slice(0, 3) + '.' + decimal.slice(3);
+                    }
+                    else
+                    {
+                        microtime = time + padding(decimal, '0', 3, 'right');
+                    }
+        
                     return Number(microtime);
                 }
             }
