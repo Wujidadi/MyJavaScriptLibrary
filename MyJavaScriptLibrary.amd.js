@@ -328,7 +328,7 @@ define(() => {
                         decimal = date.split('.')[1],
                         time = String(new Date(datetime).getTime()).slice(0, -3),
                         microtime = '';
-        
+
                     if (decimal.length > 3)
                     {
                         microtime = time + decimal.slice(0, 3) + '.' + decimal.slice(3);
@@ -337,7 +337,7 @@ define(() => {
                     {
                         microtime = time + this.padding(decimal, '0', 3, 'right');
                     }
-        
+
                     return Number(microtime);
                 }
             }
@@ -417,43 +417,43 @@ define(() => {
                   ymdthi = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d)$/,
                   ymdthis = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
                   ymdthisu = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)\.\d{3}$/;
-        
+
             let snum = parseInt(s),
                 msnum = parseInt(ms),
                 second, millisecond;
-            
+
             // 指定秒數
             switch (true)
             {
                 case (snum >= 60):
                     second = '59';
                     break;
-                
+
                 case (snum >= 0):
                     second = this.padding(snum, '0', 2);
                     break;
-        
+
                 default:
                     second = '00';
                     break;
             }
-        
+
             // 指定毫秒數
             switch (true)
             {
                 case (msnum >= 1000):
                     millisecond = '999';
                     break;
-        
+
                 case (msnum >= 0):
                     millisecond = this.padding(msnum, '0', 3);
                     break;
-        
+
                 default:
                     millisecond = '000';
                     break;
             }
-        
+
             // 輸出
             switch (milli)
             {
@@ -462,36 +462,36 @@ define(() => {
                     {
                         case (ymdhis.test(date)):
                             return date + '.' + millisecond;
-        
+
                         case (ymdthi.test(date)):
                             return date.replace('T', ' ') + ':' + second + '.' + millisecond;
-                        
+
                         case (ymdthis.test(date)):
                             return date.replace('T', ' ') + '.' + millisecond;
-                        
+
                         case (ymdthisu.test(date)):
                             return date.replace('T', ' ');
-        
+
                         default:
                             return null;
                     }
                     break;
-        
+
                 default:
                     switch (true)
                     {
                         case (ymdhis.test(date)):
                             return date;
-        
+
                         case (ymdthi.test(date)):
                             return date.replace('T', ' ') + ':' + second;
-                        
+
                         case (ymdthis.test(date)):
                             return date.replace('T', ' ');
-                        
+
                         case (ymdthisu.test(date)):
                             return date.replace('T', ' ').replace(/\.\d{3}/, '');
-        
+
                         default:
                             return null;
                     }
@@ -606,13 +606,13 @@ define(() => {
                 minute = 0,
                 second = 0,
                 millisecond = 0;
-        
+
             /** 轉換等級索引值 */
             let levelIndex = null;
-        
+
             /** 最高轉換等級 */
             const highestLevel = 'w';   // 週
-        
+
             /** 合法轉換等級陣列物件 */
             const legalLevel = {
                 'ms': [ 'ms', 'milli', 'millis', 'millisec', 'millisecs', 'millisecond', 'milliseconds' ],
@@ -622,10 +622,10 @@ define(() => {
                 'd':  [ 'd',                                              'day',         'days'         ],
                 'w':  [ 'w',                                              'week',        'weeks'        ]
             };
-        
+
             /* 未指定轉換等級時，自動代入最高轉換等級；指定其他轉換等級時，一律先將等級字串轉小寫 */
             level = (level === null) ? highestLevel : level.toLowerCase();
-        
+
             /* 轉換等級合法時，直接賦予索引值 */
             for (let i = 0; i < Object.keys(legalLevel).length; i++)
             {
@@ -636,61 +636,61 @@ define(() => {
                     break;
                 }
             }
-        
+
             /* 轉換等級非法時，以最高等級索引值代入 */
             if (levelIndex === null)
             {
                 levelIndex = Object.keys(legalLevel).length - 1;
             }
-        
+
             /*
             |----------------------------------------------------------------
             | 經過以上程序，轉換等級索引被限定在 0 與最高等級的索引值之間
             | 便可確保無論有無指定合法 level，都能正確進行接下來的轉換
             |----------------------------------------------------------------
             */
-        
+
             /* 指定的毫秒值為正確的數字時，將其賦予毫秒數 */
             if (!isNaN(ms))
             {
                 millisecond = ms;
             }
-        
+
             /* 毫秒數達到進位門檻且轉換等級為秒級以上時，計算秒數及餘下的毫秒數 */
             if (millisecond >= 1000 && levelIndex >= 1)
             {
                 second = Math.floor(ms / 1000);
                 millisecond = ms - second * 1000;
             }
-        
+
             /* 秒數達到進位門檻且轉換等級為分鐘級以上時，計算分鐘數及餘下的秒數 */
             if (second >= 60 && levelIndex >= 2)
             {
                 minute = Math.floor(second / 60);
                 second -= minute * 60;
             }
-        
+
             /* 分鐘數達到進位門檻且轉換等級為小時級以上時，計算小時數及餘下的分鐘數 */
             if (minute >= 60 && levelIndex >= 3)
             {
                 hour = Math.floor(minute / 60);
                 minute -= hour * 60;
             }
-        
+
             /* 小時數達到進位門檻且轉換等級為日（天）級以上時，計算天數及餘下的小時數 */
             if (hour >= 24 && levelIndex >= 4)
             {
                 day = Math.floor(hour / 24);
                 hour -= day * 24;
             }
-        
+
             /* 天數達到進位門檻且轉換等級為週（星期）級以上時，計算週數及餘下的天數 */
             if (day >= 7 && levelIndex >= 5)
             {
                 week = Math.floor(day / 7);
                 day -= week * 7;
             }
-        
+
             return {
                 'week': week,
                 'day': day,
@@ -946,41 +946,48 @@ define(() => {
         /**
          * 取代或增添 URL 中的 GET 參數
          *
-         * @param  {string}  key    參數鍵名
-         * @param  {string}  value  參數值
+         * @param  {{}}  pairs  參數物件
          * @return {void}
          */
-        replaceParameter: function(key, value)
+        replaceParameter: function(pairs)
         {
-            let locationPath = `${location.origin}${location.pathname}`,
-                search = location.search,
-                keyVal = `${key}=[^&]*`,
-                regex = new RegExp(keyVal),
-                newKeyVal = (value === null) ? '' : `${key}=${value}`,
+            const locationPath = `${location.origin}${location.pathname}`,
+                  search = location.search;
+            let newSearch = search,
                 newLocation = '';
-        
-            if (regex.test(location.search))
+
+            if (pairs instanceof Object && pairs.objectLength > 0)
             {
-                newLocation = locationPath + search.replace(regex, newKeyVal);
-            }
-            else
-            {
-                if (/^\?/.test(location.search))
+                Object.keys(pairs).forEach(key =>
                 {
-                    newLocation = `${locationPath}${search}` + (newKeyVal === '' ? '' : `&${newKeyVal}`)
-                }
-                else
-                {
-                    newLocation = locationPath + (newKeyVal === '' ? '' : `?${newKeyVal}`);
-                }
-            }
+                    const value = pairs[key],
+                          keyVal = `${key}=[^&]*`,
+                          regex = new RegExp(keyVal),
+                          newKeyVal = (value === null) ? '' : `${key}=${value}`;
+
+                    if (regex.test(search))
+                    {
+                        newSearch = newSearch.replace(regex, newKeyVal);
+                    }
+                    else
+                    {
+                        if (/^\?/.test(search))
+                        {
+                            newSearch = newSearch + (newKeyVal === '' ? '' : `&${newKeyVal}`);
+                        }
+                        else
+                        {
+                            newSearch = newKeyVal === '' ? '' : `?${newKeyVal}`;
+                        }
+                    }
+                });
+
+                newSearch = newSearch.replace(/\?+$/, '').replace(/&+$/, '')
+                                     .replace(/\?{2,}/, '?').replace(/&{2,}/, '&');
+                newLocation = `${locationPath}${newSearch}`;
         
-            if (/\?$/.test(newLocation) || /&$/.test(newLocation))
-            {
-                newLocation = newLocation.slice(0, -1);
+                history.replaceState({}, '', newLocation);
             }
-        
-            history.replaceState({}, '', newLocation);
         },
 
 
