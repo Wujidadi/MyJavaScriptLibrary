@@ -965,15 +965,15 @@ define(() => {
                           regex = new RegExp(keyVal),
                           newKeyVal = (value === null) ? '' : `${key}=${value}`;
 
-                    if (regex.test(search))
+                    if (regex.test(newSearch))
                     {
                         newSearch = newSearch.replace(regex, newKeyVal);
                     }
                     else
                     {
-                        if (/^\?/.test(search))
+                        if (/^\?/.test(newSearch))
                         {
-                            newSearch = newSearch + (newKeyVal === '' ? '' : `&${newKeyVal}`);
+                            newSearch += newKeyVal === '' ? '' : `&${newKeyVal}`;
                         }
                         else
                         {
@@ -982,8 +982,8 @@ define(() => {
                     }
                 });
 
-                newSearch = newSearch.replace(/\?+$/, '').replace(/&+$/, '').replace(/^\?&+/, '')
-                                     .replace(/\?{2,}/, '?').replace(/&{2,}/, '&');
+                newSearch = newSearch.replace(/\?+$/, '').replace(/&+$/, '')
+                                     .replace(/\?{2,}/, '?').replace(/&{2,}/, '&').replace(/^\?&+/, '');
                 newLocation = `${locationPath}${newSearch}`;
         
                 history.replaceState({}, '', newLocation);
